@@ -5,6 +5,7 @@
    <PROGDIR>
     <NAME>ZAMQ_MQTT_RECEIVE</NAME>
     <DBAPL>S</DBAPL>
+    <DBNA>D$</DBNA>
     <SUBC>1</SUBC>
     <FIXPT>X</FIXPT>
     <LDBNAME>D$S</LDBNAME>
@@ -13,8 +14,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>ActiveMQ: Receive message via abapMQ MQTT TCP</ENTRY>
-     <LENGTH>45</LENGTH>
+     <ENTRY>ActiveMQ: Demo Receive message via abapMQ MQTT TCP</ENTRY>
+     <LENGTH>50</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

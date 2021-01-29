@@ -14,8 +14,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>ActiveMQ: Send message via REST API</ENTRY>
-     <LENGTH>35</LENGTH>
+     <ENTRY>ActiveMQ: Demo Send message via REST API</ENTRY>
+     <LENGTH>40</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

@@ -36,11 +36,13 @@ CLASS zcl_amq_demon_demo IMPLEMENTATION.
       RETURN.
     ENDIF.
 
+    DATA(message_string) = cl_binary_convert=>xstring_utf8_to_string( i_message-message ).
+
     CALL FUNCTION 'BAL_LOG_MSG_ADD_FREE_TEXT'
       EXPORTING
         i_log_handle     = log_handle
         i_msgty          = 'I'
-        i_text           = CONV bapi_msg( |Topic: { i_topic } Message: { i_message }| )
+        i_text           = CONV bapi_msg( |Topic: { i_message-topic } Message: { message_string }| )
       EXCEPTIONS
         log_not_found    = 1
         msg_inconsistent = 2

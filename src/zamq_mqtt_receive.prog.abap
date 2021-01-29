@@ -1,8 +1,31 @@
 *&---------------------------------------------------------------------*
 *& Report zamq_mqtt_receive
 *&---------------------------------------------------------------------*
-*&
+*& Receive demo
 *&---------------------------------------------------------------------*
+********************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2021 Uwe Fetzer and Contributors
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+********************************************************************************
 REPORT zamq_mqtt_receive.
 
 CLASS app DEFINITION CREATE PUBLIC.
@@ -20,17 +43,17 @@ CLASS app IMPLEMENTATION.
 
     TRY.
         DATA(transport) = zcl_mqtt_transport_tcp=>create(
-          iv_host = '192.168.38.148'
+          iv_host = '192.168.38.xxx'
           iv_port = '1883' ).
 
 *        DATA(transport) = zcl_mqtt_transport_tcp=>create(
-*          iv_host = 'b-d2d437a2-f577-48aa-a7c0-ed810de55a66-1.mq.eu-west-1.amazonaws.com'
+*          iv_host = 'b-xxxxxx-90ff-4626-bb45-xxxxxxxx-1.mq.eu-west-1.amazonaws.com'
 *          iv_port = '8883'
 *          iv_protocol = cl_apc_tcp_client_manager=>co_protocol_type_tcps ).
 
         transport->connect( ).
         transport->send( NEW zcl_mqtt_packet_connect( ) ).
-*        transport->send( NEW zcl_mqtt_packet_connect( iv_username = 'se38' iv_password = 'Shu2tosh####' ) ).
+*        transport->send( NEW zcl_mqtt_packet_connect( iv_username = 'xxx' iv_password = 'xxxxx' ) ).
 
         DATA(connack) = CAST zcl_mqtt_packet_connack( transport->listen( 10 ) ).
         cl_demo_output=>write( |CONNACK return code: { connack->get_return_code( ) }| ).

@@ -3,9 +3,8 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZAMQ_MQTT_SEND</NAME>
+    <NAME>ZAMQ_START_DEAMON</NAME>
     <DBAPL>S</DBAPL>
-    <DBNA>D$</DBNA>
     <SUBC>1</SUBC>
     <FIXPT>X</FIXPT>
     <LDBNAME>D$S</LDBNAME>
@@ -14,8 +13,20 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>AciveMQ: Demo Send message via abapMQ MQTT TCP</ENTRY>
-     <LENGTH>46</LENGTH>
+     <ENTRY>Start abapMQ Deamon</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_DGUID</KEY>
+     <ENTRY>Deamon GUID</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_STOP</KEY>
+     <ENTRY>Stop-Message</ENTRY>
+     <LENGTH>20</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

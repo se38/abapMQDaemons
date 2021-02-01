@@ -38,16 +38,15 @@ CLASS app DEFINITION CREATE PUBLIC.
 
   PRIVATE SECTION.
     METHODS get_deamon
-      IMPORTING i_dguid         TYPE guid_16
-      RETURNING VALUE(r_result) TYPE zamq_deamons.
+      IMPORTING iv_dguid         TYPE guid_16
+      RETURNING VALUE(rs_result) TYPE zamq_deamons.
     METHODS get_broker
-      IMPORTING i_brokername    TYPE zamq_broker_name
-      RETURNING VALUE(r_result) TYPE zamq_broker.
+      IMPORTING iv_brokername    TYPE zamq_broker_name
+      RETURNING VALUE(rs_result) TYPE zamq_broker.
     METHODS create_tcp_transport
-      IMPORTING i_broker        TYPE zamq_broker
-      RETURNING VALUE(r_result) TYPE REF TO zif_mqtt_transport
-      RAISING
-                cx_apc_error.
+      IMPORTING iv_broker        TYPE zamq_broker
+      RETURNING VALUE(rs_result) TYPE REF TO zif_mqtt_transport
+      RAISING   cx_apc_error.
 
 ENDCLASS.
 
@@ -141,7 +140,7 @@ CLASS app IMPLEMENTATION.
   METHOD get_deamon.
 
     SELECT SINGLE * FROM zamq_deamons
-      INTO @r_result
+      INTO @rs_result
       WHERE guid = @p_dguid.
 
     IF sy-subrc <> 0.
@@ -153,17 +152,17 @@ CLASS app IMPLEMENTATION.
   METHOD get_broker.
 
     SELECT SINGLE * FROM zamq_broker
-      INTO @r_result
-      WHERE broker_name = @i_brokername.
+      INTO @rs_result
+      WHERE broker_name = @iv_brokername.
 
   ENDMETHOD.
 
   METHOD create_tcp_transport.
 
-    r_result = zcl_mqtt_transport_tcp=>create(
-      iv_host = i_broker-broker_host
-      iv_port = CONV #( i_broker-broker_port )
-      iv_protocol = SWITCH #( i_broker-use_ssl
+    rs_result = zcl_mqtt_transport_tcp=>create(
+      iv_host = iv_broker-broker_host
+      iv_port = CONV #( iv_broker-broker_port )
+      iv_protocol = SWITCH #( iv_broker-use_ssl
                                 WHEN abap_true
                                 THEN cl_apc_tcp_client_manager=>co_protocol_type_tcps
                                 ELSE cl_apc_tcp_client_manager=>co_protocol_type_tcp

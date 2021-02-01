@@ -45,16 +45,16 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     DATA alv_broker TYPE REF TO cl_salv_table.
 
     METHODS get_deamons
-      RETURNING VALUE(r_result) LIKE deamons.
+      RETURNING VALUE(rs_result) LIKE deamons.
     METHODS get_broker
-      RETURNING VALUE(r_result) LIKE broker.
+      RETURNING VALUE(rs_result) LIKE broker.
 
     METHODS create_alv_deamons
-      CHANGING  c_deamons       LIKE deamons
-      RETURNING VALUE(r_result) TYPE REF TO cl_salv_table.
+      CHANGING  cs_deamons       LIKE deamons
+      RETURNING VALUE(ro_result) TYPE REF TO cl_salv_table.
     METHODS create_alv_broker
-      CHANGING  c_broker        LIKE broker
-      RETURNING VALUE(r_result) TYPE REF TO cl_salv_table.
+      CHANGING  cs_broker        LIKE broker
+      RETURNING VALUE(ro_result) TYPE REF TO cl_salv_table.
 
 ENDCLASS.
 
@@ -82,7 +82,7 @@ CLASS lcl_app IMPLEMENTATION.
 
       IF alv_deamons IS NOT BOUND.
         deamons = get_deamons( ).
-        alv_deamons = create_alv_deamons( CHANGING c_deamons = deamons ).
+        alv_deamons = create_alv_deamons( CHANGING cs_deamons = deamons ).
       ENDIF.
 
     ENDIF.
@@ -109,7 +109,7 @@ CLASS lcl_app IMPLEMENTATION.
   METHOD get_deamons.
 
     SELECT * FROM zamq_deamons
-      INTO TABLE @r_result.
+      INTO TABLE @rs_result.
 
   ENDMETHOD.
 
@@ -120,22 +120,22 @@ CLASS lcl_app IMPLEMENTATION.
           EXPORTING
             r_container  = NEW cl_gui_custom_container( 'CCC_9000' )
           IMPORTING
-            r_salv_table = r_result
+            r_salv_table = ro_result
           CHANGING
-            t_table      = c_deamons
+            t_table      = cs_deamons
         ).
 
-        r_result->get_columns( )->get_column( 'GUID' )->set_technical( abap_true ).
-        r_result->get_columns( )->get_column( 'MANDT' )->set_technical( abap_true ).
-        r_result->get_columns( )->set_optimize( abap_true ).
+        ro_result->get_columns( )->get_column( 'GUID' )->set_technical( abap_true ).
+        ro_result->get_columns( )->get_column( 'MANDT' )->set_technical( abap_true ).
+        ro_result->get_columns( )->set_optimize( abap_true ).
 
-        r_result->get_display_settings( )->set_striped_pattern( abap_true ).
+        ro_result->get_display_settings( )->set_striped_pattern( abap_true ).
 
       CATCH cx_salv_msg
             cx_salv_not_found.
     ENDTRY.
 
-    r_result->display( ).
+    ro_result->display( ).
 
   ENDMETHOD.
 
@@ -143,7 +143,7 @@ CLASS lcl_app IMPLEMENTATION.
   METHOD get_broker.
 
     SELECT * FROM zamq_broker
-      INTO TABLE @r_result.
+      INTO TABLE @rs_result.
 
   ENDMETHOD.
 
@@ -154,21 +154,21 @@ CLASS lcl_app IMPLEMENTATION.
           EXPORTING
             r_container  = NEW cl_gui_custom_container( 'CCC_9010' )
           IMPORTING
-            r_salv_table = r_result
+            r_salv_table = ro_result
           CHANGING
-            t_table      = c_broker
+            t_table      = cs_broker
         ).
 
-        r_result->get_columns( )->get_column( 'MANDT' )->set_technical( abap_true ).
-        r_result->get_columns( )->set_optimize( abap_true ).
+        ro_result->get_columns( )->get_column( 'MANDT' )->set_technical( abap_true ).
+        ro_result->get_columns( )->set_optimize( abap_true ).
 
-        r_result->get_display_settings( )->set_striped_pattern( abap_true ).
+        ro_result->get_display_settings( )->set_striped_pattern( abap_true ).
 
       CATCH cx_salv_msg
             cx_salv_not_found.
     ENDTRY.
 
-    r_result->display( ).
+    ro_result->display( ).
 
   ENDMETHOD.
 
@@ -185,7 +185,7 @@ CLASS lcl_app IMPLEMENTATION.
 
       IF alv_broker IS NOT BOUND.
         broker = get_broker( ).
-        alv_broker = create_alv_broker( CHANGING c_broker = broker ).
+        alv_broker = create_alv_broker( CHANGING cs_broker = broker ).
       ENDIF.
 
     ENDIF.

@@ -154,7 +154,7 @@
     "type_form_parameters": true,
     "types_naming": false,
     "uncaught_exception": true,
-    "unknown_types": true,
+    "unknown_types": false,
     "unreachable_code": true,
     "unused_methods": false,
     "unused_types": true,

@@ -47,6 +47,15 @@ CLASS app DEFINITION CREATE PUBLIC.
       IMPORTING i_broker        TYPE zamq_broker
       RETURNING VALUE(r_result) TYPE REF TO zif_mqtt_transport
       RAISING   cx_apc_error.
+    METHODS wait_and_process
+      IMPORTING i_tcp           TYPE REF TO zif_mqtt_transport
+                i_timeout       TYPE i
+                i_handler       TYPE REF TO zif_amq_deamon
+      RETURNING VALUE(r_result) TYPE string
+      RAISING   zcx_mqtt.
+    METHODS create_handler
+      IMPORTING i_handler_class_name TYPE zamq_deamons-handler_class
+      RETURNING VALUE(r_result)      TYPE REF TO zif_amq_deamon.
 
 ENDCLASS.
 
@@ -58,14 +67,7 @@ CLASS app IMPLEMENTATION.
 
     DATA(deamon) = get_deamon( p_dguid ).
     DATA(broker) = get_broker( deamon-broker_name ).
-
-    DATA handler TYPE REF TO zif_amq_deamon.
-
-    TRY.
-        CREATE OBJECT handler TYPE (deamon-handler_class).
-      CATCH cx_sy_create_object_error INTO DATA(lcx).
-        MESSAGE lcx TYPE 'E'.
-    ENDTRY.
+    DATA(handler) = create_handler( deamon-handler_class ).
 
     DATA topic_strings TYPE string_table.
     SPLIT deamon-topics AT ',' INTO TABLE topic_strings.
@@ -101,22 +103,14 @@ CLASS app IMPLEMENTATION.
             "             -> else process message in handler class and wait again
             " after one hour (= timeout) -> reconnect
             """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-            DO.
-              TRY.
-                  DATA(message) = CAST zcl_mqtt_packet_publish( tcp->listen( 3600 ) )->get_message( ).
-                  DATA(message_string) = cl_binary_convert=>xstring_utf8_to_string( message-message ).
+            DATA(message_string) = wait_and_process(
+              i_tcp = tcp
+              i_timeout = 3600
+              i_handler = handler
+            ).
 
-                  IF message_string = p_stop.
-                    EXIT.
-                  ENDIF.
-
-                  handler->on_receive( message ).
-                CATCH zcx_mqtt_timeout.
-                  EXIT.
-              ENDTRY.
-            ENDDO.
           ELSE.
-            WRITE:/ 'Connection Error, Returncode', return_codes[ 1 ].
+            WRITE: / 'Connection Error, Returncode', return_codes[ 1 ].
           ENDIF.
           """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -131,7 +125,7 @@ CLASS app IMPLEMENTATION.
 
       CATCH cx_apc_error
             zcx_mqtt INTO DATA(lcx_apc).
-        WRITE:/ lcx_apc->get_text( ).
+        WRITE: / lcx_apc->get_text( ).
         EXIT.
     ENDTRY.
 
@@ -168,6 +162,42 @@ CLASS app IMPLEMENTATION.
                                 ELSE cl_apc_tcp_client_manager=>co_protocol_type_tcp
                             )
     ).
+
+  ENDMETHOD.
+
+  METHOD wait_and_process.
+
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " wait an hour for new messages
+    " new message -> STOP message? -> disconnect and exit
+    "             -> else process message in handler class and wait again
+    " after one hour (= timeout) -> reconnect
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+    DO.
+      TRY.
+          DATA(message) = CAST zcl_mqtt_packet_publish( i_tcp->listen( i_timeout ) )->get_message( ).
+          r_result = cl_binary_convert=>xstring_utf8_to_string( message-message ).
+
+          IF r_result = p_stop.
+            EXIT.
+          ENDIF.
+
+          i_handler->on_receive( message ).
+        CATCH zcx_mqtt_timeout.
+          EXIT.
+      ENDTRY.
+    ENDDO.
+
+  ENDMETHOD.
+
+  METHOD create_handler.
+
+    TRY.
+        CREATE OBJECT r_result TYPE (i_handler_class_name).
+      CATCH cx_sy_create_object_error INTO DATA(lcx).
+        MESSAGE lcx TYPE 'E'.
+    ENDTRY.
 
   ENDMETHOD.
 

@@ -23,7 +23,10 @@
   "syntax": {
     "version": "v740sp08",
     "errorNamespace": "^(Z|Y|LCL_|TY_|LIF_)",
-    "globalConstants": [],
+    "globalConstants": [
+      "icon_dummy",
+      "icon_oo_object"
+    ],
     "globalMacros": []
   },
   "rules": {

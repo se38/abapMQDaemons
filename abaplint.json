@@ -104,7 +104,7 @@
     "names_no_dash": true,
     "nesting": true,
     "newline_between_methods": true,
-    "no_public_attributes": true,
+    "no_public_attributes": false,
     "object_naming": {
       "exclude": [],
       "severity": "Error",

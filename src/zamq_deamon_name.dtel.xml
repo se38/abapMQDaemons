@@ -15,7 +15,9 @@
     <SCRTEXT_M>Deamonname</SCRTEXT_M>
     <SCRTEXT_L>Deamonname</SCRTEXT_L>
     <DTELMASTER>E</DTELMASTER>
-    <DATATYPE>STRG</DATATYPE>
+    <DATATYPE>CHAR</DATATYPE>
+    <LENG>000020</LENG>
+    <OUTPUTLEN>000020</OUTPUTLEN>
    </DD04V>
   </asx:values>
  </asx:abap>

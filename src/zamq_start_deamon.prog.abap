@@ -30,6 +30,8 @@ REPORT zamq_start_deamon.
 
 PARAMETERS: p_dguid TYPE guid_16 OBLIGATORY.
 PARAMETERS: p_stop TYPE c LENGTH 20 DEFAULT 'STOP' OBLIGATORY.
+PARAMETERS: p_user TYPE zamq_user LOWER CASE.
+PARAMETERS: p_pass TYPE zamq_password LOWER CASE.
 
 CLASS app DEFINITION CREATE PUBLIC.
 
@@ -56,6 +58,9 @@ CLASS app DEFINITION CREATE PUBLIC.
     METHODS create_handler
       IMPORTING i_handler_class_name TYPE zamq_deamons-handler_class
       RETURNING VALUE(r_result)      TYPE REF TO zif_amq_deamon.
+    METHODS write_appl_log
+      IMPORTING i_text TYPE string
+                i_type TYPE symsgty DEFAULT 'S'.
 
 ENDCLASS.
 
@@ -74,6 +79,8 @@ CLASS app IMPLEMENTATION.
 
     DATA(topics) = VALUE zcl_mqtt_packet_subscribe=>ty_topics( FOR topic IN topic_strings ( topic = topic ) ).
 
+    write_appl_log( |Deamon { deamon-deamon_name } started at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
+
     TRY.
         DO.
           DATA(tcp) = create_tcp_transport( broker ).
@@ -81,7 +88,7 @@ CLASS app IMPLEMENTATION.
           tcp->connect( ).
 
           TRY.
-              tcp->send( NEW zcl_mqtt_packet_connect( iv_username = broker-broker_user iv_password = broker-broker_password ) ).
+              tcp->send( NEW zcl_mqtt_packet_connect( iv_username = p_user iv_password = p_pass ) ).
 
               DATA(connack) = CAST zcl_mqtt_packet_connack( tcp->listen( 10 ) ).
 
@@ -95,32 +102,39 @@ CLASS app IMPLEMENTATION.
               EXIT.
           ENDTRY.
 
-          IF return_codes[ 1 ] = '00'.
+          TRY.
+              IF return_codes[ 1 ] = '00'.
 
-            """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-            " wait an hour for new messages
-            " new message -> STOP message? -> disconnect and exit
-            "             -> else process message in handler class and wait again
-            " after one hour (= timeout) -> reconnect
-            """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-            DATA(message_string) = wait_and_process(
-              i_tcp = tcp
-              i_timeout = 3600
-              i_handler = handler
-            ).
+                """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+                " wait an hour for new messages
+                " new message -> STOP message? -> disconnect and exit
+                "             -> else process message in handler class and wait again
+                " after one hour or timeout by broker -> reconnect
+                """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+                DATA(message_string) = wait_and_process(
+                  i_tcp = tcp
+                  i_timeout = 3600
+                  i_handler = handler
+                ).
 
-          ELSE.
-            WRITE: / 'Connection Error, Returncode', return_codes[ 1 ].
-          ENDIF.
-          """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+              ELSE.
+                write_appl_log(
+                  i_text = |Connection Error, Returncode' { return_codes[ 1 ] }|
+                  i_type = 'E'
+                ).
+              ENDIF.
+              """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-          tcp->send( NEW zcl_mqtt_packet_disconnect( ) ).
-          tcp->disconnect( ).
+              tcp->send( NEW zcl_mqtt_packet_disconnect( ) ).
+              tcp->disconnect( ).
 
-          IF message_string = p_stop
-          OR return_codes[ 1 ] <> '00'.
-            EXIT.
-          ENDIF.
+              IF message_string = p_stop
+              OR return_codes[ 1 ] <> '00'.
+                EXIT.
+              ENDIF.
+
+            CATCH zcx_mqtt_timeout ##no_handler.
+          ENDTRY.
         ENDDO.
 
       CATCH cx_apc_error
@@ -128,6 +142,8 @@ CLASS app IMPLEMENTATION.
         WRITE: / lcx_apc->get_text( ).
         EXIT.
     ENDTRY.
+
+    write_appl_log( |Deamon stopped at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
 
   ENDMETHOD.
 
@@ -171,22 +187,18 @@ CLASS app IMPLEMENTATION.
     " wait an hour for new messages
     " new message -> STOP message? -> disconnect and exit
     "             -> else process message in handler class and wait again
-    " after one hour (= timeout) -> reconnect
+    " after one hour or timeout by broker -> reconnect
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
     DO.
-      TRY.
-          DATA(message) = CAST zcl_mqtt_packet_publish( i_tcp->listen( i_timeout ) )->get_message( ).
-          r_result = cl_binary_convert=>xstring_utf8_to_string( message-message ).
+      DATA(message) = CAST zcl_mqtt_packet_publish( i_tcp->listen( i_timeout ) )->get_message( ).
+      r_result = cl_binary_convert=>xstring_utf8_to_string( message-message ).
 
-          IF r_result = p_stop.
-            EXIT.
-          ENDIF.
+      IF r_result = p_stop.
+        EXIT.
+      ENDIF.
 
-          i_handler->on_receive( message ).
-        CATCH zcx_mqtt_timeout.
-          EXIT.
-      ENDTRY.
+      i_handler->on_receive( message ).
     ENDDO.
 
   ENDMETHOD.
@@ -198,6 +210,51 @@ CLASS app IMPLEMENTATION.
       CATCH cx_sy_create_object_error INTO DATA(lcx).
         MESSAGE lcx TYPE 'E'.
     ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD write_appl_log.
+
+    DATA log TYPE bal_s_log.
+    DATA log_handle TYPE balloghndl.
+
+    log-object = 'APPL_LOG'.
+    log-subobject = 'OTHERS'.
+    log-aldate_del = sy-datum + 7.
+
+    CALL FUNCTION 'BAL_LOG_CREATE'
+      EXPORTING
+        i_s_log                 = log
+      IMPORTING
+        e_log_handle            = log_handle
+      EXCEPTIONS
+        log_header_inconsistent = 1
+        OTHERS                  = 2.
+
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    CALL FUNCTION 'BAL_LOG_MSG_ADD_FREE_TEXT'
+      EXPORTING
+        i_log_handle     = log_handle
+        i_msgty          = i_type
+        i_text           = CONV bapi_msg( i_text )
+      EXCEPTIONS
+        log_not_found    = 1
+        msg_inconsistent = 2
+        log_is_full      = 3
+        OTHERS           = 4.
+
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    CALL FUNCTION 'BAL_DB_SAVE'
+      EXPORTING
+        i_save_all = abap_true
+      EXCEPTIONS
+        OTHERS     = 0.
 
   ENDMETHOD.
 

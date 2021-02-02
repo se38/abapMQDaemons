@@ -57,14 +57,7 @@ CLASS zcl_amq_demon_demo IMPLEMENTATION.
       EXPORTING
         i_save_all       = abap_true
       EXCEPTIONS
-        log_not_found    = 1
-        save_not_allowed = 2
-        numbering_error  = 3
-        OTHERS           = 4.
-
-    IF sy-subrc <> 0.
-      RETURN.
-    ENDIF.
+        OTHERS           = 0.
 
   ENDMETHOD.
 

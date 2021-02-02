@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>abapMQ Deamon Monitor</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZAMQ_DEAMONSTOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZAMQ_DEAMONS</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>Z_AMQ_START_DEAMON</FUNCNAME>
+     <REMOTE_CALL>R</REMOTE_CALL>
+     <SHORT_TEXT>Start Deamon</SHORT_TEXT>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>I_DGUID</PARAMETER>
+       <TYP>GUID_16</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>I_STOP</PARAMETER>
+       <DEFAULT>&apos;STOP&apos;</DEFAULT>
+       <OPTIONAL>X</OPTIONAL>
+       <TYP>CHAR20</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>I_USER</PARAMETER>
+       <TYP>ZAMQ_USER</TYP>
+      </RSIMP>
+      <RSIMP>
+       <PARAMETER>I_PASSWORD</PARAMETER>
+       <TYP>ZAMQ_PASSWORD</TYP>
+      </RSIMP>
+     </IMPORT>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>I_DGUID</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_STOP</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_USER</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>I_PASSWORD</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

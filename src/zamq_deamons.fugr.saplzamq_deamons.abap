@@ -1,8 +1,8 @@
 *******************************************************************
 *   System-defined Include-files.                                 *
 *******************************************************************
-  INCLUDE LZAMQ_DEAMONSTOP.                  " Global Declarations
-  INCLUDE LZAMQ_DEAMONSUXX.                  " Function Modules
+INCLUDE lzamq_deamonstop.                  " Global Declarations
+INCLUDE lzamq_deamonsuxx.                  " Function Modules
 
 *******************************************************************
 *   User-defined Include-files (if necessary).                    *

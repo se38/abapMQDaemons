@@ -91,7 +91,7 @@
     "method_length": false,
     "method_overwrites_builtin": true,
     "method_parameter_names": false,
-    "mix_returning": true,
+    "mix_returning": false,
     "msag_consistency": true,
     "names_no_dash": true,
     "nesting": true,

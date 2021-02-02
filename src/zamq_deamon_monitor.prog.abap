@@ -105,7 +105,6 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD get_deamons.
 
     SELECT * FROM zamq_deamons
@@ -139,7 +138,6 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD get_broker.
 
     SELECT * FROM zamq_broker
@@ -172,8 +170,6 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-
   METHOD status_9010.
 
     IF sy-pfkey <> '9010'.
@@ -191,8 +187,6 @@ CLASS lcl_app IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
-
 
 ENDCLASS.
 

@@ -38,7 +38,21 @@
     "check_include": true,
     "check_no_handler_pragma": true,
     "check_subrc": false,
-    "check_syntax": true,
+    "check_syntax": {
+      "exclude": [
+        zif_mqtt_transport,
+        zcl_mqtt_transport_tcp,
+        zcl_mqtt_packet_connack,
+        zcl_mqtt_packet_connect,
+        zcl_mqtt_packet_subscribe,
+        zcl_mqtt_packet_suback,
+        zcl_mqtt_packet_publish,
+        zcx_mqtt_timeout,
+        zcl_mqtt_packet_disconnect,
+        zcx_mqtt
+      ],
+      "severity": "Error"
+    },
     "check_text_elements": true,
     "check_transformation_exists": true,
     "class_attribute_names": false,

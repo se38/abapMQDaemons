@@ -39,9 +39,8 @@ CLASS app DEFINITION CREATE PUBLIC.
     METHODS main.
 
   PRIVATE SECTION.
-    METHODS get_deamon
-      IMPORTING i_dguid         TYPE guid_16
-      RETURNING VALUE(r_result) TYPE zamq_deamons.
+    DATA appl_log TYPE REF TO zcl_amq_appl_log.
+
     METHODS get_broker
       IMPORTING i_brokername    TYPE zamq_broker_name
       RETURNING VALUE(r_result) TYPE zamq_broker.
@@ -52,15 +51,9 @@ CLASS app DEFINITION CREATE PUBLIC.
     METHODS wait_and_process
       IMPORTING i_tcp           TYPE REF TO zif_mqtt_transport
                 i_timeout       TYPE i
-                i_handler       TYPE REF TO zif_amq_deamon
+                i_deamon        TYPE REF TO zcl_amq_deamon
       RETURNING VALUE(r_result) TYPE string
       RAISING   zcx_mqtt.
-    METHODS create_handler
-      IMPORTING i_handler_class_name TYPE zamq_deamons-handler_class
-      RETURNING VALUE(r_result)      TYPE REF TO zif_amq_deamon.
-    METHODS write_appl_log
-      IMPORTING i_text TYPE string
-                i_type TYPE symsgty DEFAULT 'S'.
 
 ENDCLASS.
 
@@ -70,16 +63,23 @@ CLASS app IMPLEMENTATION.
 
   METHOD main.
 
-    DATA(deamon) = get_deamon( p_dguid ).
-    DATA(broker) = get_broker( deamon-broker_name ).
-    DATA(handler) = create_handler( deamon-handler_class ).
+    appl_log = NEW #( ).
 
-    DATA topic_strings TYPE string_table.
-    SPLIT deamon-topics AT ',' INTO TABLE topic_strings.
+    TRY.
+        DATA(deamon) = zcl_amq_deamon=>get_deamon( p_dguid ).
+      CATCH zcx_amq_deamon INTO DATA(lcx_deamon).
+        appl_log->add_message(
+          i_message_type = 'E'
+          i_text         = lcx_deamon->get_text( ) ).
+        RETURN.
+    ENDTRY.
 
+    DATA(broker) = get_broker( deamon->get_broker_name(  ) ).
+    DATA(topic_strings) = deamon->get_topics( ).
     DATA(topics) = VALUE zcl_mqtt_packet_subscribe=>ty_topics( FOR topic IN topic_strings ( topic = topic ) ).
 
-    write_appl_log( |Deamon { deamon-deamon_name } started at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
+    DATA(log_handle) = appl_log->add_message( |Deamon { deamon->get_deamon_name( ) } started at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
+    deamon->set_log_handle( log_handle ).
 
     TRY.
         DO.
@@ -114,13 +114,13 @@ CLASS app IMPLEMENTATION.
                 DATA(message_string) = wait_and_process(
                   i_tcp = tcp
                   i_timeout = 3600
-                  i_handler = handler
+                  i_deamon = deamon
                 ).
 
               ELSE.
-                write_appl_log(
+                appl_log->add_message(
                   i_text = |Connection Error, Returncode' { return_codes[ 1 ] }|
-                  i_type = 'E'
+                  i_message_type = 'E'
                 ).
               ENDIF.
               """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -139,23 +139,15 @@ CLASS app IMPLEMENTATION.
 
       CATCH cx_apc_error
             zcx_mqtt INTO DATA(lcx_apc).
-        WRITE: / lcx_apc->get_text( ).
+        appl_log->add_message(
+          i_message_type = 'E'
+          i_text         = lcx_apc->get_text( ) ).
         EXIT.
     ENDTRY.
 
-    write_appl_log( |Deamon stopped at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
-
-  ENDMETHOD.
-
-  METHOD get_deamon.
-
-    SELECT SINGLE * FROM zamq_deamons
-      INTO @r_result
-      WHERE guid = @p_dguid.
-
-    IF sy-subrc <> 0.
-      MESSAGE e952(00).       "not found
-    ENDIF.
+    appl_log->add_message( |Deamon stopped at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
+    CLEAR log_handle.
+    deamon->set_log_handle( log_handle ).
 
   ENDMETHOD.
 
@@ -198,63 +190,8 @@ CLASS app IMPLEMENTATION.
         EXIT.
       ENDIF.
 
-      i_handler->on_receive( message ).
+      i_deamon->handle_message( message ).
     ENDDO.
-
-  ENDMETHOD.
-
-  METHOD create_handler.
-
-    TRY.
-        CREATE OBJECT r_result TYPE (i_handler_class_name).
-      CATCH cx_sy_create_object_error INTO DATA(lcx).
-        MESSAGE lcx TYPE 'E'.
-    ENDTRY.
-
-  ENDMETHOD.
-
-  METHOD write_appl_log.
-
-    DATA log TYPE bal_s_log.
-    DATA log_handle TYPE balloghndl.
-
-    log-object = 'APPL_LOG'.
-    log-subobject = 'OTHERS'.
-    log-aldate_del = sy-datum + 7.
-
-    CALL FUNCTION 'BAL_LOG_CREATE'
-      EXPORTING
-        i_s_log                 = log
-      IMPORTING
-        e_log_handle            = log_handle
-      EXCEPTIONS
-        log_header_inconsistent = 1
-        OTHERS                  = 2.
-
-    IF sy-subrc <> 0.
-      RETURN.
-    ENDIF.
-
-    CALL FUNCTION 'BAL_LOG_MSG_ADD_FREE_TEXT'
-      EXPORTING
-        i_log_handle     = log_handle
-        i_msgty          = i_type
-        i_text           = CONV bapi_msg( i_text )
-      EXCEPTIONS
-        log_not_found    = 1
-        msg_inconsistent = 2
-        log_is_full      = 3
-        OTHERS           = 4.
-
-    IF sy-subrc <> 0.
-      RETURN.
-    ENDIF.
-
-    CALL FUNCTION 'BAL_DB_SAVE'
-      EXPORTING
-        i_save_all = abap_true
-      EXCEPTIONS
-        OTHERS     = 0.
 
   ENDMETHOD.
 

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>abapMQ Deamon</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>GET_BROKER_NAME</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the Brokername of the Deamon</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>GET_DEAMON</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Reads definition from DB and returns des Deamon as object</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>GET_DEAMON_NAME</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the Deamonname</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>GET_HANDLER_CLASS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the handler classname</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>GET_LOG_HANDLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the current log handle</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>GET_TOPICS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the topics of the Deamon as string table</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>HANDLE_MESSAGE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Handle incoming messages</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>SET_LOG_HANDLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Sets the log handle in the Deamon DB</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

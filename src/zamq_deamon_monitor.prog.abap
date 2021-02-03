@@ -143,6 +143,7 @@ CLASS lcl_app IMPLEMENTATION.
 
         r_result->get_columns( )->get_column( 'GUID' )->set_technical( abap_true ).
         r_result->get_columns( )->get_column( 'MANDT' )->set_technical( abap_true ).
+        r_result->get_columns( )->get_column( 'LOG_HANDLE' )->set_technical( abap_true ).
         r_result->get_columns( )->set_optimize( abap_true ).
 
         r_result->get_display_settings( )->set_striped_pattern( abap_true ).
@@ -221,11 +222,7 @@ CLASS lcl_app IMPLEMENTATION.
       deactivate_deamon( deamon ).
     ENDIF.
 
-    alv_deamons->refresh(
-*      EXPORTING
-*        s_stable     =
-*        refresh_mode = if_salv_c_refresh=>soft
-    ).
+    alv_deamons->refresh( ).
 
   ENDMETHOD.
 

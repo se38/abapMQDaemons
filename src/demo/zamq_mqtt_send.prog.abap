@@ -43,18 +43,16 @@ CLASS app IMPLEMENTATION.
 
     TRY.
         DATA(transport) = zcl_mqtt_transport_tcp=>create(
-          iv_host = '192.168.38.148'
+          iv_host = '192.168.38.xxx'
           iv_port = '1883' ).
 
 *        DATA(transport) = zcl_mqtt_transport_tcp=>create(
-*          iv_host = 'b-a1714306-90ff-4626-bb45-2d57213d7d14-1.mq.eu-west-1.amazonaws.com'
+*          iv_host = 'b-xxxx-90ff-4626-bb45-xxxxx-1.mq.eu-west-1.amazonaws.com'
 *          iv_port = '8883'
 *          iv_protocol = cl_apc_tcp_client_manager=>co_protocol_type_tcps ).
 
         transport->connect( ).
-*        transport->send( NEW zcl_mqtt_packet_connect( iv_username = 'se38' iv_password = 'Shu2tosh####' ) ).
         transport->send( NEW zcl_mqtt_packet_connect( iv_username = '' iv_password = '' ) ).
-*        transport->send( NEW zcl_mqtt_packet_connect( ) ).
 
         DATA(connack) = CAST zcl_mqtt_packet_connack( transport->listen( 10 ) ).
         cl_demo_output=>write( |CONNACK return code: { connack->get_return_code( ) }| ).

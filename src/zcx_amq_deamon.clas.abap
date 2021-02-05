@@ -13,20 +13,28 @@ CLASS zcx_amq_deamon DEFINITION
       BEGIN OF deamon_not_found,
         msgid TYPE symsgid VALUE 'ZCX_AMQ_DEAMON',
         msgno TYPE symsgno VALUE '001',
-        attr1 TYPE scx_attrname VALUE 'DGUID',
+        attr1 TYPE scx_attrname VALUE 'GUID',
         attr2 TYPE scx_attrname VALUE 'attr2',
         attr3 TYPE scx_attrname VALUE 'attr3',
         attr4 TYPE scx_attrname VALUE 'attr4',
-      END OF deamon_not_found.
+      END OF deamon_not_found,
+      BEGIN OF message_not_found,
+        msgid TYPE symsgid VALUE 'ZCX_AMQ_DEAMON',
+        msgno TYPE symsgno VALUE '002',
+        attr1 TYPE scx_attrname VALUE 'GUID',
+        attr2 TYPE scx_attrname VALUE 'attr2',
+        attr3 TYPE scx_attrname VALUE 'attr3',
+        attr4 TYPE scx_attrname VALUE 'attr4',
+      END OF message_not_found.
 
     METHODS constructor
       IMPORTING
         textid   LIKE if_t100_message=>t100key OPTIONAL
         previous LIKE previous OPTIONAL
-        dguid    TYPE guid_16.
+        guid    TYPE guid_16.
 
   PRIVATE SECTION.
-    DATA dguid TYPE guid_16.
+    DATA guid TYPE guid_16.
 
 ENDCLASS.
 
@@ -46,7 +54,7 @@ CLASS zcx_amq_deamon IMPLEMENTATION.
       if_t100_message~t100key = textid.
     ENDIF.
 
-    me->dguid = dguid.
+    me->guid = guid.
 
   ENDMETHOD.
 

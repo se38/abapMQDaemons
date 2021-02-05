@@ -252,46 +252,58 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD deactivate_deamon.
 
-    i_deamon->active = icon_dummy.
+    CLEAR screen_fields.
+    CALL SCREEN 9020 STARTING AT 5 5.
 
-    UPDATE zamq_deamons
-      SET active = @ICON_dummy
-      WHERE guid = @i_deamon->guid.
+    IF canceled = abap_false.
 
-    DATA(broker) = get_broker( i_deamon->broker_name ).
+      DATA(broker) = get_broker( i_deamon->broker_name ).
 
-    TRY.
-        DATA(transport) = zcl_mqtt_transport_tcp=>create(
-          iv_host = broker-broker_host
-          iv_port = CONV #( broker-broker_port ) ).
+      TRY.
+          DATA(transport) = zcl_mqtt_transport_tcp=>create(
+            iv_host = broker-broker_host
+            iv_port = CONV #( broker-broker_port )
+            iv_protocol = SWITCH #( broker-use_ssl
+                            WHEN abap_true
+                            THEN cl_apc_tcp_client_manager=>co_protocol_type_tcps
+                            ELSE cl_apc_tcp_client_manager=>co_protocol_type_tcp
+                          )
+            ).
 
-        transport->connect( ).
-        transport->send( NEW zcl_mqtt_packet_connect( iv_username = app->screen_fields-broker_user iv_password = app->screen_fields-broker_password ) ).
+          transport->connect( ).
+          transport->send( NEW zcl_mqtt_packet_connect( iv_username = app->screen_fields-broker_user iv_password = app->screen_fields-broker_password ) ).
 
+          DATA(connack) = CAST zcl_mqtt_packet_connack( transport->listen( 10 ) ).
 
-        DATA(connack) = CAST zcl_mqtt_packet_connack( transport->listen( 10 ) ).
-*        cl_demo_output=>write( |CONNACK return code: { connack->get_return_code( ) }| ).
+          IF connack->get_return_code( ) = '00'.
+            SPLIT i_deamon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
 
-        """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-        SPLIT i_deamon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
+            DATA(message) = VALUE zif_mqtt_packet=>ty_message(
+              topic   = first_topic
+              message = cl_binary_convert=>string_to_xstring_utf8( 'STOP' ) ).
 
-        DATA(message) = VALUE zif_mqtt_packet=>ty_message(
-          topic   = first_topic
-          message = cl_binary_convert=>string_to_xstring_utf8( 'STOP' ) ).
+            transport->send( NEW zcl_mqtt_packet_publish( is_message = message ) ).
 
-        transport->send( NEW zcl_mqtt_packet_publish( is_message = message ) ).
+            transport->send( NEW zcl_mqtt_packet_disconnect( ) ).
+            transport->disconnect( ).
+          ENDIF.
 
-        transport->send( NEW zcl_mqtt_packet_disconnect( ) ).
-        transport->disconnect( ).
+        CATCH zcx_mqtt_timeout.
+          cl_demo_output=>write( 'timeout' ).
 
-      CATCH zcx_mqtt_timeout.
-        cl_demo_output=>write( 'timeout' ).
+        CATCH cx_apc_error
+               zcx_mqtt INTO DATA(lcx).
+          cl_demo_output=>write( lcx->get_text( ) ).
 
-      CATCH cx_apc_error
-             zcx_mqtt INTO DATA(lcx).
-        cl_demo_output=>write( lcx->get_text( ) ).
+      ENDTRY.
 
-    ENDTRY.
+      i_deamon->active = icon_dummy.
+
+      UPDATE zamq_deamons
+        SET active = @ICON_dummy
+        WHERE guid = @i_deamon->guid.
+
+    ENDIF.
 
   ENDMETHOD.
 

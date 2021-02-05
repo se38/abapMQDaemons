@@ -36,8 +36,13 @@ CLASS app DEFINITION CREATE PUBLIC.
   PUBLIC SECTION.
     METHODS main.
 
-  PROTECTED SECTION.
   PRIVATE SECTION.
+    METHODS get_message
+      IMPORTING i_message_guid  TYPE guid_16
+      RETURNING VALUE(r_result) TYPE zif_mqtt_packet=>ty_message
+      RAISING   zcx_amq_deamon.
+    METHODS delete_message
+      IMPORTING i_message_guid TYPE guid_16.
 
 ENDCLASS.
 
@@ -54,15 +59,41 @@ CLASS app IMPLEMENTATION.
         DATA handler TYPE REF TO zif_amq_deamon.
         CREATE OBJECT handler TYPE (handler_class_name).
 
-*        handler->on_receive(
-*          EXPORTING
-*            i_message     =
-**            i_deamon_guid =
-*        ).
+        handler->on_receive(
+          EXPORTING
+            i_message     = get_message( p_mguid )
+            i_deamon_guid = p_dguid
+        ).
+
+        delete_message( p_mguid ).
+
       CATCH zcx_amq_deamon
             cx_sy_create_object_error INTO DATA(lcx).
         MESSAGE lcx TYPE 'E'.
     ENDTRY.
+
+  ENDMETHOD.
+
+  METHOD get_message.
+
+    SELECT SINGLE topic, message
+      INTO @r_result
+      FROM zamq_messages
+      WHERE guid = @i_message_guid.
+
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE zcx_amq_deamon
+        EXPORTING
+          textid = zcx_amq_deamon=>message_not_found
+          guid   = i_message_guid.
+    ENDIF.
+
+  ENDMETHOD.
+
+  METHOD delete_message.
+
+    DELETE FROM zamq_messages
+      WHERE guid = @i_message_guid.
 
   ENDMETHOD.
 

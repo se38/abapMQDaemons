@@ -28,15 +28,9 @@ CLASS zcl_amq_deamon DEFINITION
     METHODS get_deamon_name
       RETURNING VALUE(r_result) TYPE zamq_deamon_name.
 
-    "! <p class="shorttext synchronized" lang="en">Sets the log handle in the Deamon DB</p>
-    "! @parameter i_log_handle | <p class="shorttext synchronized" lang="en">Log handle</p>
-    METHODS set_log_handle
-      IMPORTING i_log_handle TYPE balloghndl.
 
-    "! <p class="shorttext synchronized" lang="en">Returns the current log handle</p>
-    "! @parameter r_result | <p class="shorttext synchronized" lang="en">Log handle</p>
-    METHODS get_log_handle
-      RETURNING VALUE(r_result) TYPE balloghndl.
+
+
 
     "! <p class="shorttext synchronized" lang="en">Handle incoming messages</p>
     "! @parameter i_message | <p class="shorttext synchronized" lang="en">Message</p>
@@ -63,8 +57,6 @@ CLASS zcl_amq_deamon DEFINITION
 
 ENDCLASS.
 
-
-
 CLASS zcl_amq_deamon IMPLEMENTATION.
 
   METHOD get_deamon.
@@ -84,7 +76,7 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
       RAISE EXCEPTION TYPE zcx_amq_deamon
         EXPORTING
           textid = zcx_amq_deamon=>deamon_not_found
-          dguid  = i_dguid.
+          guid   = i_dguid.
     ENDIF.
 
   ENDMETHOD.
@@ -99,16 +91,6 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
 
   METHOD get_deamon_name.
     r_result = deamon-deamon_name.
-  ENDMETHOD.
-
-  METHOD set_log_handle.
-    UPDATE zamq_deamons
-      SET log_handle = @i_log_handle
-      WHERE guid = @deamon-guid.
-  ENDMETHOD.
-
-  METHOD get_log_handle.
-    r_result = deamon-log_handle.
   ENDMETHOD.
 
   METHOD handle_message.
@@ -138,6 +120,71 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
         OTHERS           = 4.
 
     CHECK sy-subrc = 0.
+
+    SUBMIT zamq_handle_message
+      WITH p_mguid = message_guid
+      WITH p_dguid = deamon-guid
+      USER 'DEVELOPER'
+      VIA JOB 'ABAPMQ' NUMBER jobcount
+      AND RETURN.
+
+    CALL FUNCTION 'JOB_CLOSE'
+      EXPORTING
+*       at_opmode            = space
+*       at_opmode_periodic   = space
+*       calendar_id          = space
+*       event_id             = space
+*       event_param          = space
+*       event_periodic       = space
+        jobcount             = jobcount
+        jobname              = 'ABAPMQ'
+*       laststrtdt           = NO_DATE
+*       laststrttm           = NO_TIME
+*       prddays              = 0
+*       prdhours             = 0
+*       prdmins              = 0
+*       prdmonths            = 0
+*       prdweeks             = 0
+*       predjob_checkstat    = space
+*       pred_jobcount        = space
+*       pred_jobname         = space
+*       sdlstrtdt            = sy-datum
+*       sdlstrttm            = sy-uzeit
+*       startdate_restriction       = BTC_PROCESS_ALWAYS
+        strtimmed            = abap_true
+*       targetsystem         = space
+*       start_on_workday_not_before = SY-DATUM
+*       start_on_workday_nr  = 0
+*       workday_count_direction     = 0
+*       recipient_obj        =
+*       targetserver         = space
+*       dont_release         = space
+*       targetgroup          = space
+        direct_start         = abap_true
+*       inherit_recipient    =
+*       inherit_target       =
+*       register_child       = abap_false
+*       time_zone            =
+*       email_notification   =
+*      IMPORTING
+*       job_was_released     = job_was_released
+*      CHANGING
+*       ret                  =
+      EXCEPTIONS
+        cant_start_immediate = 1
+        invalid_startdate    = 2
+        jobname_missing      = 3
+        job_close_failed     = 4
+        job_nosteps          = 5
+        job_notex            = 6
+        lock_failed          = 7
+        invalid_target       = 8
+        invalid_time_zone    = 9
+        OTHERS               = 10.
+
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
 
 
   ENDMETHOD.

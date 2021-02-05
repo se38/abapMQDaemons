@@ -38,12 +38,6 @@
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
-     <CMPNAME>GET_LOG_HANDLE</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>Returns the current log handle</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
      <CMPNAME>GET_TOPICS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Returns the topics of the Deamon as string table</DESCRIPT>
@@ -53,12 +47,6 @@
      <CMPNAME>HANDLE_MESSAGE</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Handle incoming messages</DESCRIPT>
-    </SEOCOMPOTX>
-    <SEOCOMPOTX>
-     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
-     <CMPNAME>SET_LOG_HANDLE</CMPNAME>
-     <LANGU>E</LANGU>
-     <DESCRIPT>Sets the log handle in the Deamon DB</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>

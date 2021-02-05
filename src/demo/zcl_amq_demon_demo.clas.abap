@@ -28,10 +28,7 @@ CLASS zcl_amq_demon_demo IMPLEMENTATION.
     ENDTRY.
 
     DATA(message_string) = cl_binary_convert=>xstring_utf8_to_string( i_message-message ).
-
-    appl_log->add_message(
-      i_log_handle   = deamon->get_log_handle( )
-      i_text         = message_string ).
+    appl_log->add_message( |Deamon { deamon->get_deamon_name(  ) } Topic { i_message-topic } Message { message_string }| ).
 
   ENDMETHOD.
 

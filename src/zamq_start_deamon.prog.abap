@@ -79,7 +79,6 @@ CLASS app IMPLEMENTATION.
     DATA(topics) = VALUE zcl_mqtt_packet_subscribe=>ty_topics( FOR topic IN topic_strings ( topic = topic ) ).
 
     DATA(log_handle) = appl_log->add_message( |Deamon { deamon->get_deamon_name( ) } started at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
-    deamon->set_log_handle( log_handle ).
 
     TRY.
         DO.
@@ -146,8 +145,6 @@ CLASS app IMPLEMENTATION.
     ENDTRY.
 
     appl_log->add_message( |Deamon stopped at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
-    CLEAR log_handle.
-    deamon->set_log_handle( log_handle ).
 
   ENDMETHOD.
 

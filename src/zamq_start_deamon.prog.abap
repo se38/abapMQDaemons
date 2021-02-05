@@ -53,7 +53,8 @@ CLASS app DEFINITION CREATE PUBLIC.
                 i_timeout       TYPE i
                 i_deamon        TYPE REF TO zcl_amq_deamon
       RETURNING VALUE(r_result) TYPE string
-      RAISING   zcx_mqtt.
+      RAISING   zcx_mqtt
+                zcx_amq_deamon.
 
 ENDCLASS.
 
@@ -137,6 +138,7 @@ CLASS app IMPLEMENTATION.
         ENDDO.
 
       CATCH cx_apc_error
+            zcx_amq_deamon
             zcx_mqtt INTO DATA(lcx_apc).
         appl_log->add_message(
           i_message_type = 'E'

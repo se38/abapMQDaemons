@@ -28,14 +28,11 @@ CLASS zcl_amq_deamon DEFINITION
     METHODS get_deamon_name
       RETURNING VALUE(r_result) TYPE zamq_deamon_name.
 
-
-
-
-
     "! <p class="shorttext synchronized" lang="en">Handle incoming messages</p>
     "! @parameter i_message | <p class="shorttext synchronized" lang="en">Message</p>
     METHODS handle_message
-      IMPORTING i_message TYPE zif_mqtt_packet=>ty_message.
+      IMPORTING i_message TYPE zif_mqtt_packet=>ty_message
+      RAISING   zcx_amq_deamon.
 
     "! <p class="shorttext synchronized" lang="en">Returns the handler classname</p>
     "! @parameter r_result | <p class="shorttext synchronized" lang="en">Handler classname</p>
@@ -50,10 +47,9 @@ CLASS zcl_amq_deamon DEFINITION
       RETURNING VALUE(r_result) TYPE zamq_deamons
       RAISING   zcx_amq_deamon.
     METHODS save_message
-      IMPORTING
-        i_message       TYPE zif_mqtt_packet=>ty_message
-      RETURNING
-        VALUE(r_result) TYPE guid_16.
+      IMPORTING i_message       TYPE zif_mqtt_packet=>ty_message
+      RETURNING VALUE(r_result) TYPE sysuuid_x16
+      RAISING   cx_uuid_error.
 
 ENDCLASS.
 
@@ -95,31 +91,34 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
 
   METHOD handle_message.
 
-    DATA(message_guid) = save_message( i_message ).
+    TRY.
+        DATA(message_guid) = save_message( i_message ).
+      CATCH cx_uuid_error INTO DATA(lcx).
+        RAISE EXCEPTION TYPE zcx_amq_deamon
+          EXPORTING
+            textid = zcx_amq_deamon=>message_error
+            text   = lcx->get_text( ).
+    ENDTRY.
 
     DATA jobcount TYPE btcjobcnt .
 
     CALL FUNCTION 'JOB_OPEN'
       EXPORTING
-*       delanfrep        = space
-*       jobgroup         = space
         jobname          = 'ABAPMQ'
-*       sdlstrtdt        = NO_DATE
-*       sdlstrttm        = NO_TIME
-*       jobclass         =
-*       check_jobclass   =
       IMPORTING
         jobcount         = jobcount
-*       info             =
-*      CHANGING
-*       ret              =
       EXCEPTIONS
         cant_create_job  = 1
         invalid_job_data = 2
         jobname_missing  = 3
         OTHERS           = 4.
 
-    CHECK sy-subrc = 0.
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE zcx_amq_deamon
+        EXPORTING
+          textid = zcx_amq_deamon=>message_error
+          text   = |JOB_OPEN RC = { sy-subrc }|.
+    ENDIF.
 
     SUBMIT zamq_handle_message
       WITH p_mguid = message_guid
@@ -130,46 +129,10 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
 
     CALL FUNCTION 'JOB_CLOSE'
       EXPORTING
-*       at_opmode            = space
-*       at_opmode_periodic   = space
-*       calendar_id          = space
-*       event_id             = space
-*       event_param          = space
-*       event_periodic       = space
         jobcount             = jobcount
         jobname              = 'ABAPMQ'
-*       laststrtdt           = NO_DATE
-*       laststrttm           = NO_TIME
-*       prddays              = 0
-*       prdhours             = 0
-*       prdmins              = 0
-*       prdmonths            = 0
-*       prdweeks             = 0
-*       predjob_checkstat    = space
-*       pred_jobcount        = space
-*       pred_jobname         = space
-*       sdlstrtdt            = sy-datum
-*       sdlstrttm            = sy-uzeit
-*       startdate_restriction       = BTC_PROCESS_ALWAYS
         strtimmed            = abap_true
-*       targetsystem         = space
-*       start_on_workday_not_before = SY-DATUM
-*       start_on_workday_nr  = 0
-*       workday_count_direction     = 0
-*       recipient_obj        =
-*       targetserver         = space
-*       dont_release         = space
-*       targetgroup          = space
         direct_start         = abap_true
-*       inherit_recipient    =
-*       inherit_target       =
-*       register_child       = abap_false
-*       time_zone            =
-*       email_notification   =
-*      IMPORTING
-*       job_was_released     = job_was_released
-*      CHANGING
-*       ret                  =
       EXCEPTIONS
         cant_start_immediate = 1
         invalid_startdate    = 2
@@ -183,18 +146,17 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
         OTHERS               = 10.
 
     IF sy-subrc <> 0.
-      RETURN.
+      RAISE EXCEPTION TYPE zcx_amq_deamon
+        EXPORTING
+          textid = zcx_amq_deamon=>message_error
+          text   = |JOB_CLOSE RC = { sy-subrc }|.
     ENDIF.
-
 
   ENDMETHOD.
 
-
   METHOD save_message.
 
-    CALL FUNCTION 'GUID_CREATE'
-      IMPORTING
-        ev_guid_16 = r_result.
+    r_result = cl_system_uuid=>create_uuid_x16_static( ).
 
     DATA(message) = VALUE zamq_messages(
       guid = r_result

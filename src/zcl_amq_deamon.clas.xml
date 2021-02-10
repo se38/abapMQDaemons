@@ -48,6 +48,12 @@
      <LANGU>E</LANGU>
      <DESCRIPT>Handle incoming messages</DESCRIPT>
     </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON</CLSNAME>
+     <CMPNAME>START</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Start deamon</DESCRIPT>
+    </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>
  </asx:abap>

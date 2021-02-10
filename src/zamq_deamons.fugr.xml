@@ -21,7 +21,7 @@
        <PARAMETER>I_STOP</PARAMETER>
        <DEFAULT>&apos;STOP&apos;</DEFAULT>
        <OPTIONAL>X</OPTIONAL>
-       <TYP>CHAR20</TYP>
+       <TYP>STRING</TYP>
       </RSIMP>
       <RSIMP>
        <PARAMETER>I_USER</PARAMETER>

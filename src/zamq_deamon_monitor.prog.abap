@@ -180,9 +180,10 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD get_deamons.
 
-    SELECT * FROM zamq_deamons
-      INTO TABLE @r_result
-      ORDER BY broker_name, deamon_name.
+    SELECT FROM zamq_deamons
+      FIELDS *
+      ORDER BY broker_name, deamon_name
+      INTO TABLE @r_result.
 
   ENDMETHOD.
 
@@ -215,9 +216,10 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD get_brokers.
 
-    SELECT * FROM zamq_broker
-      INTO TABLE @r_result
-      ORDER BY broker_name.
+    SELECT FROM zamq_broker
+      FIELDS *
+      ORDER BY broker_name
+      INTO TABLE @r_result.
 
   ENDMETHOD.
 
@@ -417,9 +419,10 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD get_broker.
 
-    SELECT SINGLE * FROM zamq_broker
-      INTO @r_result
-      WHERE broker_name = @i_brokername.
+    SELECT SINGLE FROM zamq_broker
+      FIELDS *
+      WHERE broker_name = @i_brokername
+      INTO @r_result.
 
   ENDMETHOD.
 
@@ -476,7 +479,7 @@ CLASS lcl_app IMPLEMENTATION.
     ENDIF.
 
     TRANSLATE screen_fields-broker-broker_host TO LOWER CASE.
-    INSERT zamq_broker FROM screen_fields-broker.
+    INSERT zamq_broker FROM @screen_fields-broker.
     INSERT screen_fields-broker INTO TABLE broker.
   ENDMETHOD.
 
@@ -507,7 +510,7 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD update_broker.
 
-    UPDATE zamq_broker FROM screen_fields-broker.
+    UPDATE zamq_broker FROM @screen_fields-broker.
 
     DATA(broker_line) = REF #( broker[ broker_name = screen_fields-broker-broker_name ] ).
     broker_line->broker_host = screen_fields-broker-broker_host.

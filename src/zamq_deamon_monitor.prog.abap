@@ -36,9 +36,18 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     METHODS main.
 
     METHODS status_9000.
+
+    METHODS status_9005.
+    METHODS exit_command_9005.
+    METHODS user_command_9005.
+
     METHODS status_9010.
     METHODS exit_command.
     METHODS user_command.
+
+    METHODS status_9015.
+    METHODS exit_command_9015.
+    METHODS user_command_9015.
 
     METHODS status_9020.
     METHODS exit_command_9020.
@@ -51,12 +60,12 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     DATA alv_broker TYPE REF TO cl_salv_table.
 
     DATA canceled TYPE abap_bool.
+    DATA change_ind TYPE cdchngind.
 
     METHODS get_deamons
       RETURNING VALUE(r_result) LIKE deamons.
     METHODS get_brokers
       RETURNING VALUE(r_result) LIKE broker.
-
     METHODS create_alv_deamons
       CHANGING  c_deamons       LIKE deamons
       RETURNING VALUE(r_result) TYPE REF TO cl_salv_table.
@@ -71,7 +80,12 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     METHODS get_broker
       IMPORTING i_brokername    TYPE zamq_broker_name
       RETURNING VALUE(r_result) TYPE zamq_broker.
-
+    METHODS insert_broker
+      RAISING zcx_amq_deamon.
+    METHODS get_selected_broker
+      RETURNING VALUE(r_result) TYPE zamq_broker.
+    METHODS delete_broker.
+    METHODS update_broker.
 
 ENDCLASS.
 
@@ -117,7 +131,50 @@ CLASS lcl_app IMPLEMENTATION.
         LEAVE TO SCREEN 9010.
       WHEN 'TOGGLE'.
         toggle_activation( ).
+
+      WHEN 'NEW'.
+        change_ind = 'I'.
+        CASE sy-pfkey.
+          WHEN '9000'.          "Deamons
+            CLEAR screen_fields-deamon.
+            CALL SCREEN 9005
+             STARTING AT 1 1.
+          WHEN '9010'.          "Broker
+            CLEAR screen_fields-broker.
+            CALL SCREEN 9015
+             STARTING AT 1 1.
+        ENDCASE.
+
+      WHEN 'EDIT'.
+        change_ind = 'U'.
+        CASE sy-pfkey.
+          WHEN '9000'.          "Deamons
+            CLEAR screen_fields-deamon.
+            CALL SCREEN 9005
+             STARTING AT 1 1.
+          WHEN '9010'.          "Broker
+            screen_fields-broker = get_selected_broker( ).
+            CALL SCREEN 9015
+             STARTING AT 1 1.
+        ENDCASE.
+
+      WHEN 'DELETE_ROW'.
+        change_ind = 'D'.
+        CASE sy-pfkey.
+          WHEN '9000'.          "Deamons
+            CLEAR screen_fields-deamon.
+            CALL SCREEN 9005
+             STARTING AT 1 1.
+          WHEN '9010'.          "Broker
+            screen_fields-broker = get_selected_broker( ).
+            CHECK screen_fields-broker IS NOT INITIAL.
+
+            CALL SCREEN 9015
+             STARTING AT 1 1.
+        ENDCASE.
+
     ENDCASE.
+
 
   ENDMETHOD.
 
@@ -206,6 +263,7 @@ CLASS lcl_app IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
+
 
   METHOD toggle_activation.
 
@@ -321,6 +379,37 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD status_9015.
+
+    IF sy-pfkey <> '9015'.
+      IF change_ind = 'I' OR change_ind = 'U'.
+        SET PF-STATUS '9015' EXCLUDING 'DELETE'.
+      ELSE.
+        SET PF-STATUS '9015' EXCLUDING 'SAVE'.
+      ENDIF.
+
+      LOOP AT SCREEN.
+        IF change_ind = 'U'
+        OR change_ind = 'D'.
+          IF screen-group1 = 'KEY'.
+            screen-input = 0.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDIF.
+
+        IF change_ind = 'D'.
+          IF screen-group1 = 'FLD'.
+            screen-input = 0.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDIF.
+      ENDLOOP.
+
+      SET TITLEBAR '9015'.
+    ENDIF.
+
+  ENDMETHOD.
+
   METHOD user_command_9020.
     canceled = abap_false.
     LEAVE TO SCREEN 0.
@@ -331,6 +420,99 @@ CLASS lcl_app IMPLEMENTATION.
     SELECT SINGLE * FROM zamq_broker
       INTO @r_result
       WHERE broker_name = @i_brokername.
+
+  ENDMETHOD.
+
+  METHOD exit_command_9005.
+
+  ENDMETHOD.
+
+  METHOD exit_command_9015.
+    LEAVE TO SCREEN 0.
+  ENDMETHOD.
+
+  METHOD status_9005.
+
+  ENDMETHOD.
+
+  METHOD user_command_9005.
+
+  ENDMETHOD.
+
+  METHOD user_command_9015.
+
+    TRY.
+        CASE change_ind.
+          WHEN 'I'.
+            insert_broker( ).
+          WHEN 'U'.
+            update_broker( ).
+          WHEN 'D'.
+            delete_broker( ).
+        ENDCASE.
+
+      CATCH zcx_amq_deamon INTO DATA(lcx).
+        MESSAGE lcx TYPE 'W' DISPLAY LIKE 'E'.
+        RETURN.
+    ENDTRY.
+
+    alv_broker->refresh( ).
+    LEAVE TO SCREEN 0.
+
+  ENDMETHOD.
+
+
+  METHOD insert_broker.
+    SELECT SINGLE FROM zamq_broker
+      FIELDS @abap_true
+      WHERE broker_name = @screen_fields-broker-broker_name
+      INTO @DATA(exists).
+
+    IF exists = abap_true.
+      RAISE EXCEPTION TYPE zcx_amq_deamon
+        EXPORTING
+          textid      = zcx_amq_deamon=>broker_exists
+          broker_name = screen_fields-broker-broker_name.
+    ENDIF.
+
+    TRANSLATE screen_fields-broker-broker_host TO LOWER CASE.
+    INSERT zamq_broker FROM screen_fields-broker.
+    INSERT screen_fields-broker INTO TABLE broker.
+  ENDMETHOD.
+
+
+  METHOD get_selected_broker.
+
+    CLEAR r_result.
+
+    alv_broker->get_metadata( ).        "needed after PAI
+    DATA(rows) = alv_broker->get_selections( )->get_selected_rows( ).
+    CHECK rows IS NOT INITIAL.
+
+    r_result = broker[ rows[ 1 ] ].
+
+  ENDMETHOD.
+
+
+  METHOD delete_broker.
+
+    DELETE FROM zamq_broker
+      WHERE broker_name = @screen_fields-broker-broker_name.
+
+    DELETE broker
+      WHERE broker_name = screen_fields-broker-broker_name.
+
+  ENDMETHOD.
+
+
+  METHOD update_broker.
+
+    UPDATE zamq_broker FROM screen_fields-broker.
+
+    DATA(broker_line) = REF #( broker[ broker_name = screen_fields-broker-broker_name ] ).
+    broker_line->broker_host = screen_fields-broker-broker_host.
+    broker_line->broker_port = screen_fields-broker-broker_port.
+    broker_line->use_ssl     = screen_fields-broker-use_ssl.
 
   ENDMETHOD.
 
@@ -362,4 +544,16 @@ ENDMODULE.
 
 MODULE user_command_9020 INPUT.
   app->user_command_9020( ).
+ENDMODULE.
+
+MODULE status_9015 OUTPUT.
+  app->status_9015( ).
+ENDMODULE.
+
+MODULE exit_command_9015 INPUT.
+  app->exit_command_9015( ).
+ENDMODULE.
+
+MODULE user_command_9015 INPUT.
+  app->user_command_9015( ).
 ENDMODULE.

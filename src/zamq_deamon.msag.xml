@@ -26,6 +26,12 @@
      <MSGNR>003</MSGNR>
      <TEXT>Error in message processing: &amp;1</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Broker &amp;1 already exists</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

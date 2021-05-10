@@ -190,7 +190,7 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
       message = i_message-message
     ).
 
-    INSERT zamq_messages FROM message.
+    INSERT zamq_messages FROM @message.
 
   ENDMETHOD.
 

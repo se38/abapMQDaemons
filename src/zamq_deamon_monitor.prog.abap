@@ -499,6 +499,7 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD delete_broker.
 
+    "ToDo: check whether broker is still in use by a deamon
     DELETE FROM zamq_broker
       WHERE broker_name = @screen_fields-broker-broker_name.
 

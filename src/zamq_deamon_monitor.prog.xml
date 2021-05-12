@@ -244,11 +244,11 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_BROKER-BROKER_HOST</NAME>
-       <TEXT>Host/IP_or_Route_Str________________________________________________________________________________________________________________</TEXT>
+       <TEXT>Host/IP_or_Route_Str</TEXT>
        <ROLLING>X</ROLLING>
        <LINE>002</LINE>
        <COLUMN>001</COLUMN>
-       <LENGTH>255</LENGTH>
+       <LENGTH>020</LENGTH>
        <VISLENGTH>020</VISLENGTH>
        <HEIGHT>001</HEIGHT>
        <FORMAT>CHAR</FORMAT>

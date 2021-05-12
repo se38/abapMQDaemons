@@ -86,6 +86,9 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
       RETURNING VALUE(r_result) TYPE zamq_broker.
     METHODS delete_broker.
     METHODS update_broker.
+    METHODS insert_deamon.
+    METHODS update_deamon.
+    METHODS delete_deamon.
 
 ENDCLASS.
 
@@ -427,7 +430,7 @@ CLASS lcl_app IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD exit_command_9005.
-
+    LEAVE TO SCREEN 0.
   ENDMETHOD.
 
   METHOD exit_command_9015.
@@ -436,9 +439,47 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD status_9005.
 
+    IF sy-pfkey <> '9005'.
+      IF change_ind = 'I' OR change_ind = 'U'.
+        SET PF-STATUS '9005' EXCLUDING 'DELETE'.
+      ELSE.
+        SET PF-STATUS '9005' EXCLUDING 'SAVE'.
+      ENDIF.
+
+      IF change_ind = 'D'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'FLD'.
+            screen-input = 0.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+      ENDIF.
+
+      SET TITLEBAR '9005'.
+    ENDIF.
+
+
   ENDMETHOD.
 
   METHOD user_command_9005.
+
+    TRY.
+        CASE change_ind.
+          WHEN 'I'.
+            insert_deamon( ).
+          WHEN 'U'.
+            update_deamon( ).
+          WHEN 'D'.
+            delete_deamon( ).
+        ENDCASE.
+
+      CATCH zcx_amq_deamon INTO DATA(lcx).
+        MESSAGE lcx TYPE 'W' DISPLAY LIKE 'E'.
+        RETURN.
+    ENDTRY.
+
+    alv_deamons->refresh( ).
+    LEAVE TO SCREEN 0.
 
   ENDMETHOD.
 
@@ -466,6 +507,7 @@ CLASS lcl_app IMPLEMENTATION.
 
 
   METHOD insert_broker.
+
     SELECT SINGLE FROM zamq_broker
       FIELDS @abap_true
       WHERE broker_name = @screen_fields-broker-broker_name
@@ -481,6 +523,7 @@ CLASS lcl_app IMPLEMENTATION.
     TRANSLATE screen_fields-broker-broker_host TO LOWER CASE.
     INSERT zamq_broker FROM @screen_fields-broker.
     INSERT screen_fields-broker INTO TABLE broker.
+
   ENDMETHOD.
 
 
@@ -520,6 +563,42 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
+
+  METHOD insert_deamon.
+
+    CALL FUNCTION 'GUID_CREATE'
+      IMPORTING
+        ev_guid_16 = screen_fields-deamon-guid.
+
+    INSERT zamq_deamons FROM @screen_fields-deamon.
+    INSERT screen_fields-deamon INTO TABLE deamons.
+
+  ENDMETHOD.
+
+
+  METHOD update_deamon.
+
+    UPDATE zamq_deamons FROM @screen_fields-deamon.
+
+    DATA(deamon_line) = REF #( deamons[ guid = screen_fields-deamon-guid ] ).
+    deamon_line->broker_name = screen_fields-deamon-broker_name.
+    deamon_line->deamon_name = screen_fields-deamon-deamon_name.
+    deamon_line->topics = screen_fields-deamon-topics.
+    deamon_line->handler_class = screen_fields-deamon-handler_class.
+
+  ENDMETHOD.
+
+
+  METHOD delete_deamon.
+
+    DELETE FROM zamq_deamons
+      WHERE guid = @screen_fields-deamon-guid.
+
+    DELETE deamons
+      WHERE guid = screen_fields-deamon-guid.
+
+  ENDMETHOD.
+
 ENDCLASS.
 
 MODULE status_9000 OUTPUT.
@@ -532,6 +611,18 @@ ENDMODULE.
 
 MODULE user_command INPUT.
   app->user_command( ).
+ENDMODULE.
+
+MODULE status_9005 OUTPUT.
+  app->status_9005( ).
+ENDMODULE.
+
+MODULE exit_command_9005 INPUT.
+  app->exit_command_9005( ).
+ENDMODULE.
+
+MODULE user_command_9005 INPUT.
+  app->user_command_9005( ).
 ENDMODULE.
 
 MODULE status_9010 OUTPUT.

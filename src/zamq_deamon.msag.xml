@@ -32,6 +32,18 @@
      <MSGNR>004</MSGNR>
      <TEXT>Broker &amp;1 already exists</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Deamon &amp;1 is active. Please deactivate first</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Broker &amp;1 still in use. Delete deamons first</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

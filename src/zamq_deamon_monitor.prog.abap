@@ -89,6 +89,9 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     METHODS insert_deamon.
     METHODS update_deamon.
     METHODS delete_deamon.
+    METHODS get_selected_deamon
+      RETURNING
+        VALUE(r_result) TYPE zamq_deamons.
 
 ENDCLASS.
 
@@ -152,7 +155,12 @@ CLASS lcl_app IMPLEMENTATION.
         change_ind = 'U'.
         CASE sy-pfkey.
           WHEN '9000'.          "Deamons
-            CLEAR screen_fields-deamon.
+            screen_fields-deamon = get_selected_deamon( ).
+            CHECK screen_fields-deamon IS NOT INITIAL.
+            IF screen_fields-deamon-active = icon_oo_object.
+              MESSAGE i005(zamq_deamon) WITH screen_fields-deamon-deamon_name.
+              RETURN.
+            ENDIF.
             CALL SCREEN 9005
              STARTING AT 1 1.
           WHEN '9010'.          "Broker
@@ -165,12 +173,29 @@ CLASS lcl_app IMPLEMENTATION.
         change_ind = 'D'.
         CASE sy-pfkey.
           WHEN '9000'.          "Deamons
-            CLEAR screen_fields-deamon.
+            screen_fields-deamon = get_selected_deamon( ).
+            CHECK screen_fields-deamon IS NOT INITIAL.
+            IF screen_fields-deamon-active = icon_oo_object.
+              MESSAGE i005(zamq_deamon) WITH screen_fields-deamon-deamon_name.
+              RETURN.
+            ENDIF.
             CALL SCREEN 9005
              STARTING AT 1 1.
           WHEN '9010'.          "Broker
             screen_fields-broker = get_selected_broker( ).
             CHECK screen_fields-broker IS NOT INITIAL.
+
+            SELECT FROM zamq_deamons
+              FIELDS @abap_true
+              WHERE broker_name = @screen_fields-broker-broker_name
+              INTO @DATA(broker_in_use)
+              UP TO 1 ROWS.
+            ENDSELECT.
+
+            IF broker_in_use = abap_true.
+              MESSAGE i006(zamq_deamon) WITH screen_fields-broker-broker_name.
+              RETURN.
+            ENDIF.
 
             CALL SCREEN 9015
              STARTING AT 1 1.
@@ -340,6 +365,7 @@ CLASS lcl_app IMPLEMENTATION.
 
           IF connack->get_return_code( ) = '00'.
             SPLIT i_deamon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
+            TRANSLATE first_topic USING '/../+**+'.
 
             DATA(message) = VALUE zif_mqtt_packet=>ty_message(
               topic   = first_topic
@@ -363,7 +389,7 @@ CLASS lcl_app IMPLEMENTATION.
       i_deamon->active = icon_dummy.
 
       UPDATE zamq_deamons
-        SET active = @ICON_dummy
+        SET active = @icon_dummy
         WHERE guid = @i_deamon->guid.
 
     ENDIF.
@@ -542,7 +568,6 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD delete_broker.
 
-    "ToDo: check whether broker is still in use by a deamon
     DELETE FROM zamq_broker
       WHERE broker_name = @screen_fields-broker-broker_name.
 
@@ -570,6 +595,7 @@ CLASS lcl_app IMPLEMENTATION.
       IMPORTING
         ev_guid_16 = screen_fields-deamon-guid.
 
+    screen_fields-deamon-active = icon_dummy.
     INSERT zamq_deamons FROM @screen_fields-deamon.
     INSERT screen_fields-deamon INTO TABLE deamons.
 
@@ -591,11 +617,25 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD delete_deamon.
 
+    "Todo: don't delete active deamons
     DELETE FROM zamq_deamons
       WHERE guid = @screen_fields-deamon-guid.
 
     DELETE deamons
       WHERE guid = screen_fields-deamon-guid.
+
+  ENDMETHOD.
+
+
+  METHOD get_selected_deamon.
+
+    CLEAR r_result.
+
+    alv_deamons->get_metadata( ).        "needed after PAI
+    DATA(rows) = alv_deamons->get_selections( )->get_selected_rows( ).
+    CHECK rows IS NOT INITIAL.
+
+    r_result = deamons[ rows[ 1 ] ].
 
   ENDMETHOD.
 

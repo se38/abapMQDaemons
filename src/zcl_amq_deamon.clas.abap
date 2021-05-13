@@ -109,6 +109,12 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
 
   METHOD get_topics.
     SPLIT deamon-topics AT ',' INTO TABLE r_result.
+
+    "swap slash and dot
+    LOOP AT r_result REFERENCE INTO DATA(topic).
+      TRANSLATE topic->* USING '/../+**+'.
+    ENDLOOP.
+
   ENDMETHOD.
 
   METHOD get_deamon_name.
@@ -190,6 +196,8 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
       message = i_message-message
     ).
 
+    "swap dot and slash, plus and star
+    TRANSLATE message-topic USING '/../+**+'.
     INSERT zamq_messages FROM @message.
 
   ENDMETHOD.

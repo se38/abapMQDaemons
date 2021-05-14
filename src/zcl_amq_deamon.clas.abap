@@ -73,7 +73,7 @@ CLASS zcl_amq_deamon DEFINITION
     "! @parameter i_user | <p class="shorttext synchronized" lang="en">Broker user</p>
     "! @parameter i_pass | <p class="shorttext synchronized" lang="en">Broker password</p>
     METHODS start
-      IMPORTING i_stop TYPE string DEFAULT 'STOP'
+      IMPORTING i_stop TYPE zamq_stop_message DEFAULT 'STOP'
                 i_user TYPE zamq_user
                 i_pass TYPE zamq_password.
 
@@ -100,7 +100,7 @@ CLASS zcl_amq_deamon DEFINITION
     METHODS wait_and_process
       IMPORTING i_tcp           TYPE REF TO zif_mqtt_transport
                 i_timeout       TYPE i
-                i_stop          TYPE string
+                i_stop          TYPE zamq_stop_message
       RETURNING VALUE(r_result) TYPE string
       RAISING   zcx_mqtt
                 zcx_amq_deamon.

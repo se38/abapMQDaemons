@@ -25,11 +25,28 @@
 ********************************************************************************
 
 
-"! <p class="shorttext synchronized" lang="en">abapMQ Deamons interface</p>
-INTERFACE zif_amq_deamon
-  PUBLIC .
-  METHODS on_receive
-    IMPORTING i_message     TYPE zif_mqtt_packet=>ty_message
-              i_deamon_guid TYPE guid_16 OPTIONAL.
+"! <p class="shorttext synchronized" lang="en">abapMQ Deamons helper routines</p>
+CLASS zcl_amq_deamon_helper DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-ENDINTERFACE.
+  PUBLIC SECTION.
+    METHODS get_if_implementations.
+    METHODS is_if_impleneted.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS zcl_amq_deamon_helper IMPLEMENTATION.
+  METHOD get_if_implementations.
+    "read table vseoimplem
+  ENDMETHOD.
+
+  METHOD is_if_impleneted.
+    "check against table vseoimplem
+  ENDMETHOD.
+
+ENDCLASS.

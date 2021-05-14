@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>ZCX_AMQ_DEAMON</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>abapMQ Deamons message class</DESCRIPT>
+    <DESCRIPT>abapMQ Deamons Message Class</DESCRIPT>
     <CATEGORY>40</CATEGORY>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>

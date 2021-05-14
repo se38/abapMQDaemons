@@ -265,6 +265,7 @@
        <INPUT_FLD>X</INPUT_FLD>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <REQU_ENTRY>O</REQU_ENTRY>
+       <MATCHCODE>ZAMQ_HANDLER_CLASS_H</MATCHCODE>
       </RPY_DYFATC>
       <RPY_DYFATC>
        <CONT_TYPE>SCREEN</CONT_TYPE>
@@ -292,8 +293,16 @@
        <LINE>PROCESS AFTER INPUT.</LINE>
       </RPY_DYFLOW>
       <RPY_DYFLOW>
-       <LINE>  MODULE exit_COMMAND_9005 AT EXIT-COMMAND.</LINE>
+       <LINE>  MODULE exit_command_9005 AT EXIT-COMMAND.</LINE>
       </RPY_DYFLOW>
+      <RPY_DYFLOW/>
+      <RPY_DYFLOW>
+       <LINE>  FIELD app-&gt;screen_fields-deamon-handler_class</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    MODULE check_handler_class ON REQUEST.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW/>
       <RPY_DYFLOW>
        <LINE>  MODULE user_command_9005.</LINE>
       </RPY_DYFLOW>

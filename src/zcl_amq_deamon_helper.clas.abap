@@ -25,11 +25,42 @@
 ********************************************************************************
 
 
-"! <p class="shorttext synchronized" lang="en">abapMQ Deamons interface</p>
-INTERFACE zif_amq_deamon
-  PUBLIC .
-  METHODS on_receive
-    IMPORTING i_message     TYPE zif_mqtt_packet=>ty_message
-              i_deamon_guid TYPE guid_16 OPTIONAL.
+"! <p class="shorttext synchronized" lang="en">abapMQ Deamons helper routines</p>
+CLASS zcl_amq_deamon_helper DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-ENDINTERFACE.
+  PUBLIC SECTION.
+    METHODS get_if_implementations.
+    "! <p class="shorttext synchronized" lang="en">Check whether interface is implemented in class</p>
+    "! @parameter i_class_name | <p class="shorttext synchronized" lang="en">Class name</p>
+    "! @parameter i_interface_name | <p class="shorttext synchronized" lang="en">Interface name</p>
+    "! @parameter r_result | <p class="shorttext synchronized" lang="en">Is implemented</p>
+    METHODS is_if_implemented
+      IMPORTING i_class_name     TYPE seoclsname
+                i_interface_name TYPE seoclsname DEFAULT 'ZIF_AMQ_DEAMON'
+      RETURNING VALUE(r_result)  TYPE abap_bool.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+
+
+CLASS zcl_amq_deamon_helper IMPLEMENTATION.
+  METHOD get_if_implementations.
+    "read table vseoimplem
+  ENDMETHOD.
+
+  METHOD is_if_implemented.
+
+    SELECT SINGLE FROM vseoimplem
+      FIELDS @abap_true
+      WHERE clsname = @i_class_name
+      AND   refclsname = @i_interface_name
+      INTO @r_result.
+
+  ENDMETHOD.
+
+ENDCLASS.

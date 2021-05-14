@@ -33,7 +33,15 @@ CLASS zcl_amq_deamon_helper DEFINITION
 
   PUBLIC SECTION.
     METHODS get_if_implementations.
-    METHODS is_if_impleneted.
+    "! <p class="shorttext synchronized" lang="en">Check whether interface is implemented in class</p>
+    "! @parameter i_class_name | <p class="shorttext synchronized" lang="en">Class name</p>
+    "! @parameter i_interface_name | <p class="shorttext synchronized" lang="en">Interface name</p>
+    "! @parameter r_result | <p class="shorttext synchronized" lang="en">Is implemented</p>
+    METHODS is_if_implemented
+      IMPORTING i_class_name     TYPE seoclsname
+                i_interface_name TYPE seoclsname DEFAULT 'ZIF_AMQ_DEAMON'
+      RETURNING VALUE(r_result)  TYPE abap_bool.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -45,8 +53,14 @@ CLASS zcl_amq_deamon_helper IMPLEMENTATION.
     "read table vseoimplem
   ENDMETHOD.
 
-  METHOD is_if_impleneted.
-    "check against table vseoimplem
+  METHOD is_if_implemented.
+
+    SELECT SINGLE FROM vseoimplem
+      FIELDS @abap_true
+      WHERE clsname = @i_class_name
+      AND   refclsname = @i_interface_name
+      INTO @r_result.
+
   ENDMETHOD.
 
 ENDCLASS.

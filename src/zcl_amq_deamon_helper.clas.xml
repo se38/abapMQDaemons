@@ -11,6 +11,14 @@
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
    </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_AMQ_DEAMON_HELPER</CLSNAME>
+     <CMPNAME>IS_IF_IMPLEMENTED</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check whether interface is implemented in class</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
   </asx:values>
  </asx:abap>
 </abapGit>

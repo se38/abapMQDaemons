@@ -40,6 +40,7 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     METHODS status_9005.
     METHODS exit_command_9005.
     METHODS user_command_9005.
+    METHODS check_handler_class.
 
     METHODS status_9010.
     METHODS exit_command.
@@ -639,6 +640,15 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD check_handler_class.
+
+    IF NOT NEW zcl_amq_deamon_helper( )->is_if_implemented( screen_fields-deamon-handler_class ).
+      "Interface ZIF_AMQ_DEAMON not implented in class &1
+      MESSAGE e007(zamq_deamon) WITH screen_fields-deamon-handler_class.
+    ENDIF.
+
+  ENDMETHOD.
+
 ENDCLASS.
 
 MODULE status_9000 OUTPUT.
@@ -691,4 +701,8 @@ ENDMODULE.
 
 MODULE user_command_9015 INPUT.
   app->user_command_9015( ).
+ENDMODULE.
+
+MODULE check_handler_class INPUT.
+  app->check_handler_class( ).
 ENDMODULE.

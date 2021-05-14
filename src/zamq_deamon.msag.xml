@@ -44,6 +44,12 @@
      <MSGNR>006</MSGNR>
      <TEXT>Broker &amp;1 still in use. Delete deamons first</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Interface ZIF_AMQ_DEAMON not implented in class &amp;1</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

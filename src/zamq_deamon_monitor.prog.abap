@@ -91,8 +91,13 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     METHODS update_deamon.
     METHODS delete_deamon.
     METHODS get_selected_deamon
-      RETURNING
-        VALUE(r_result) TYPE zamq_deamons.
+      RETURNING VALUE(r_result) TYPE zamq_deamons.
+    METHODS is_if_implemented
+      IMPORTING i_class_name     TYPE seoclsname
+                i_interface_name TYPE seoclsname DEFAULT 'ZIF_AMQ_DEAMON'
+      RETURNING VALUE(r_result)  TYPE abap_bool.
+
+
 
 ENDCLASS.
 
@@ -144,6 +149,7 @@ CLASS lcl_app IMPLEMENTATION.
         CASE sy-pfkey.
           WHEN '9000'.          "Deamons
             CLEAR screen_fields-deamon.
+            screen_fields-deamon-stop_message = 'STOP'.
             CALL SCREEN 9005
              STARTING AT 1 1.
           WHEN '9010'.          "Broker
@@ -191,6 +197,7 @@ CLASS lcl_app IMPLEMENTATION.
               WHERE broker_name = @screen_fields-broker-broker_name
               INTO @DATA(broker_in_use)
               UP TO 1 ROWS.
+              EXIT.                    "just for abapLint
             ENDSELECT.
 
             IF broker_in_use = abap_true.
@@ -332,6 +339,7 @@ CLASS lcl_app IMPLEMENTATION.
         STARTING NEW TASK 'START_DEAMON'
         EXPORTING
           i_dguid    = i_deamon->guid
+          i_stop     = i_deamon->stop_message
           i_user     = app->screen_fields-broker_user
           i_password = app->screen_fields-broker_password.
     ENDIF.
@@ -370,7 +378,7 @@ CLASS lcl_app IMPLEMENTATION.
 
             DATA(message) = VALUE zif_mqtt_packet=>ty_message(
               topic   = first_topic
-              message = cl_binary_convert=>string_to_xstring_utf8( 'STOP' ) ).
+              message = cl_binary_convert=>string_to_xstring_utf8( |{ i_deamon->stop_message }| ) ).
 
             transport->send( NEW zcl_mqtt_packet_publish( is_message = message ) ).
 
@@ -592,9 +600,10 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD insert_deamon.
 
-    CALL FUNCTION 'GUID_CREATE'
-      IMPORTING
-        ev_guid_16 = screen_fields-deamon-guid.
+    TRY.
+        screen_fields-deamon-guid = cl_system_uuid=>create_uuid_x16_static( ).
+      CATCH cx_uuid_error ##no_handler.
+    ENDTRY.
 
     screen_fields-deamon-active = icon_dummy.
     INSERT zamq_deamons FROM @screen_fields-deamon.
@@ -608,10 +617,7 @@ CLASS lcl_app IMPLEMENTATION.
     UPDATE zamq_deamons FROM @screen_fields-deamon.
 
     DATA(deamon_line) = REF #( deamons[ guid = screen_fields-deamon-guid ] ).
-    deamon_line->broker_name = screen_fields-deamon-broker_name.
-    deamon_line->deamon_name = screen_fields-deamon-deamon_name.
-    deamon_line->topics = screen_fields-deamon-topics.
-    deamon_line->handler_class = screen_fields-deamon-handler_class.
+    deamon_line->* = CORRESPONDING #( screen_fields-deamon ).
 
   ENDMETHOD.
 
@@ -642,10 +648,20 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD check_handler_class.
 
-    IF NOT NEW zcl_amq_deamon_helper( )->is_if_implemented( screen_fields-deamon-handler_class ).
+    IF NOT is_if_implemented( screen_fields-deamon-handler_class ).
       "Interface ZIF_AMQ_DEAMON not implented in class &1
       MESSAGE e007(zamq_deamon) WITH screen_fields-deamon-handler_class.
     ENDIF.
+
+  ENDMETHOD.
+
+  METHOD is_if_implemented.
+
+    SELECT SINGLE FROM vseoimplem
+      FIELDS @abap_true
+      WHERE clsname = @i_class_name
+      AND   refclsname = @i_interface_name
+      INTO @r_result.
 
   ENDMETHOD.
 

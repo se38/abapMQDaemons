@@ -21,7 +21,7 @@
        <PARAMETER>I_STOP</PARAMETER>
        <DEFAULT>&apos;STOP&apos;</DEFAULT>
        <OPTIONAL>X</OPTIONAL>
-       <TYP>STRING</TYP>
+       <TYP>ZAMQ_STOP_MESSAGE</TYP>
       </RSIMP>
       <RSIMP>
        <PARAMETER>I_USER</PARAMETER>

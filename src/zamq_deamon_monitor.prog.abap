@@ -197,6 +197,7 @@ CLASS lcl_app IMPLEMENTATION.
               WHERE broker_name = @screen_fields-broker-broker_name
               INTO @DATA(broker_in_use)
               UP TO 1 ROWS.
+              EXIT.                    "just for abapLint
             ENDSELECT.
 
             IF broker_in_use = abap_true.

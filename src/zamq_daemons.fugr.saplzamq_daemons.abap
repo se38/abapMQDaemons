@@ -1,8 +1,8 @@
 *******************************************************************
 *   System-defined Include-files.                                 *
 *******************************************************************
-  INCLUDE LZAMQ_DAEMONSTOP.                  " Global Declarations
-  INCLUDE LZAMQ_DAEMONSUXX.                  " Function Modules
+INCLUDE LZAMQ_DAEMONSTOP.                  " Global Declarations
+INCLUDE LZAMQ_DAEMONSUXX.                  " Function Modules
 
 *******************************************************************
 *   User-defined Include-files (if necessary).                    *

@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_AMQ_DEAMON_DEMO</CLSNAME>
+    <CLSNAME>ZCL_AMQ_DAEMON_DEMO</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>abapMQ Deamon Demo</DESCRIPT>
+    <DESCRIPT>abapMQ Daemon Demo</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

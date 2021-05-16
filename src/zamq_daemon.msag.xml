@@ -3,50 +3,50 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <T100A>
-    <ARBGB>ZAMQ_DEAMON</ARBGB>
+    <ARBGB>ZAMQ_DAEMON</ARBGB>
     <MASTERLANG>E</MASTERLANG>
-    <STEXT>abapMQ Deamons</STEXT>
+    <STEXT>abapMQ Daemons</STEXT>
    </T100A>
    <T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>001</MSGNR>
      <TEXT>Deamon &amp;1 not found</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>002</MSGNR>
      <TEXT>Message &amp;1 not found</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>003</MSGNR>
      <TEXT>Error in message processing: &amp;1</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>004</MSGNR>
      <TEXT>Broker &amp;1 already exists</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>005</MSGNR>
      <TEXT>Deamon &amp;1 is active. Please deactivate first</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>006</MSGNR>
      <TEXT>Broker &amp;1 still in use. Delete deamons first</TEXT>
     </T100>
     <T100>
      <SPRSL>E</SPRSL>
-     <ARBGB>ZAMQ_DEAMON</ARBGB>
+     <ARBGB>ZAMQ_DAEMON</ARBGB>
      <MSGNR>007</MSGNR>
      <TEXT>Interface ZIF_AMQ_DEAMON not implented in class &amp;1</TEXT>
     </T100>

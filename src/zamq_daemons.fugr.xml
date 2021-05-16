@@ -2,16 +2,16 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <AREAT>abapMQ Deamon Monitor</AREAT>
+   <AREAT>abapMQ Daemons</AREAT>
    <INCLUDES>
-    <SOBJ_NAME>LZAMQ_DEAMONSTOP</SOBJ_NAME>
-    <SOBJ_NAME>SAPLZAMQ_DEAMONS</SOBJ_NAME>
+    <SOBJ_NAME>LZAMQ_DAEMONSTOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZAMQ_DAEMONS</SOBJ_NAME>
    </INCLUDES>
    <FUNCTIONS>
     <item>
-     <FUNCNAME>Z_AMQ_START_DEAMON</FUNCNAME>
+     <FUNCNAME>Z_AMQ_START_DAEMON</FUNCNAME>
      <REMOTE_CALL>R</REMOTE_CALL>
-     <SHORT_TEXT>Start Deamon</SHORT_TEXT>
+     <SHORT_TEXT>abapMQ Daemons: start daemon</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>I_DGUID</PARAMETER>

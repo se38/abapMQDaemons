@@ -1,9 +1,8 @@
-* See https://github.com/se38/abapMQ_deamon
-
+* See https://github.com/se38/abapMQ_daemon
 ********************************************************************************
 * The MIT License (MIT)
 *
-* Copyright (c) 2021 Uwe Fetzer and the abapMQ Deamons Contributors
+* Copyright (c) 2021 Uwe Fetzer and the abapMQ Daemons Contributors
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,51 +22,49 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 ********************************************************************************
-
-
-"! <p class="shorttext synchronized" lang="en">abapMQ Deamon</p>
-CLASS zcl_amq_deamon DEFINITION
+"! <p class="shorttext synchronized" lang="en">abapMQ Daemon</p>
+CLASS zcl_amq_daemon DEFINITION
   PUBLIC
   FINAL
   CREATE PRIVATE .
 
   PUBLIC SECTION.
-    "! <p class="shorttext synchronized" lang="en">Reads definition from DB and returns des Deamon as object</p>
-    "! @parameter i_dguid | <p class="shorttext synchronized" lang="en">Deamon GUID</p>
-    "! @parameter r_result | <p class="shorttext synchronized" lang="en">Deamon</p>
-    "! @raising zcx_amq_deamon | <p class="shorttext synchronized" lang="en"></p>
-    CLASS-METHODS get_deamon
+    "! <p class="shorttext synchronized" lang="en">Reads definition from DB and returns des daemon as object</p>
+    "! @parameter i_dguid | <p class="shorttext synchronized" lang="en">daemon GUID</p>
+    "! @parameter r_result | <p class="shorttext synchronized" lang="en">daemon</p>
+    "! @raising zcx_amq_daemon | <p class="shorttext synchronized" lang="en"></p>
+    CLASS-METHODS get_daemon
       IMPORTING i_dguid         TYPE guid_16
-      RETURNING VALUE(r_result) TYPE REF TO zcl_amq_deamon
-      RAISING   zcx_amq_deamon.
+      RETURNING VALUE(r_result) TYPE REF TO zcl_amq_daemon
+      RAISING   zcx_amq_daemon.
 
-    "! <p class="shorttext synchronized" lang="en">Returns the Brokername of the Deamon</p>
+    "! <p class="shorttext synchronized" lang="en">Returns the Brokername of the daemon</p>
     "! @parameter r_result | <p class="shorttext synchronized" lang="en">Brokername</p>
     METHODS get_broker_name
       RETURNING VALUE(r_result) TYPE zamq_broker_name.
 
-    "! <p class="shorttext synchronized" lang="en">Returns the topics of the Deamon as string table</p>
+    "! <p class="shorttext synchronized" lang="en">Returns the topics of the daemon as string table</p>
     "! @parameter r_result | <p class="shorttext synchronized" lang="en">Topics</p>
     METHODS get_topics
       RETURNING VALUE(r_result) TYPE string_table.
 
-    "! <p class="shorttext synchronized" lang="en">Returns the Deamonname</p>
-    "! @parameter r_result | <p class="shorttext synchronized" lang="en">Deamonname</p>
-    METHODS get_deamon_name
-      RETURNING VALUE(r_result) TYPE zamq_deamon_name.
+    "! <p class="shorttext synchronized" lang="en">Returns the daemonname</p>
+    "! @parameter r_result | <p class="shorttext synchronized" lang="en">daemonname</p>
+    METHODS get_daemon_name
+      RETURNING VALUE(r_result) TYPE zamq_daemon_name.
 
     "! <p class="shorttext synchronized" lang="en">Handle incoming messages</p>
     "! @parameter i_message | <p class="shorttext synchronized" lang="en">Message</p>
     METHODS handle_message
       IMPORTING i_message TYPE zif_mqtt_packet=>ty_message
-      RAISING   zcx_amq_deamon.
+      RAISING   zcx_amq_daemon.
 
     "! <p class="shorttext synchronized" lang="en">Returns the handler classname</p>
     "! @parameter r_result | <p class="shorttext synchronized" lang="en">Handler classname</p>
     METHODS get_handler_class
       RETURNING VALUE(r_result) TYPE seoclsname.
 
-    "! <p class="shorttext synchronized" lang="en">Start deamon</p>
+    "! <p class="shorttext synchronized" lang="en">Start daemon</p>
     "!
     "! @parameter i_stop | <p class="shorttext synchronized" lang="en">Stop message</p>
     "! @parameter i_user | <p class="shorttext synchronized" lang="en">Broker user</p>
@@ -78,13 +75,13 @@ CLASS zcl_amq_deamon DEFINITION
                 i_pass TYPE zamq_password.
 
   PRIVATE SECTION.
-    DATA deamon TYPE zamq_deamons.
+    DATA daemon TYPE zamq_daemons.
     DATA appl_log TYPE REF TO zcl_amq_appl_log.
 
-    METHODS get_deamon_db
+    METHODS get_daemon_db
       IMPORTING i_dguid         TYPE guid_16
-      RETURNING VALUE(r_result) TYPE zamq_deamons
-      RAISING   zcx_amq_deamon.
+      RETURNING VALUE(r_result) TYPE zamq_daemons
+      RAISING   zcx_amq_daemon.
     METHODS save_message
       IMPORTING i_message       TYPE zif_mqtt_packet=>ty_message
       RETURNING VALUE(r_result) TYPE sysuuid_x16
@@ -103,40 +100,40 @@ CLASS zcl_amq_deamon DEFINITION
                 i_stop          TYPE zamq_stop_message
       RETURNING VALUE(r_result) TYPE string
       RAISING   zcx_mqtt
-                zcx_amq_deamon.
+                zcx_amq_daemon.
 
 ENDCLASS.
 
-CLASS zcl_amq_deamon IMPLEMENTATION.
+CLASS zcl_amq_daemon IMPLEMENTATION.
 
-  METHOD get_deamon.
+  METHOD get_daemon.
 
     r_result = NEW #( ).
-    r_result->deamon = r_result->get_deamon_db( i_dguid ).
+    r_result->daemon = r_result->get_daemon_db( i_dguid ).
 
   ENDMETHOD.
 
-  METHOD get_deamon_db.
+  METHOD get_daemon_db.
 
-    SELECT SINGLE * FROM zamq_deamons
+    SELECT SINGLE * FROM zamq_daemons
       INTO @r_result
       WHERE guid = @i_dguid.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_amq_deamon
+      RAISE EXCEPTION TYPE zcx_amq_daemon
         EXPORTING
-          textid = zcx_amq_deamon=>deamon_not_found
+          textid = zcx_amq_daemon=>daemon_not_found
           guid   = i_dguid.
     ENDIF.
 
   ENDMETHOD.
 
   METHOD get_broker_name.
-    r_result = deamon-broker_name.
+    r_result = daemon-broker_name.
   ENDMETHOD.
 
   METHOD get_topics.
-    SPLIT deamon-topics AT ',' INTO TABLE r_result.
+    SPLIT daemon-topics AT ',' INTO TABLE r_result.
 
     "swap slash and dot
     LOOP AT r_result REFERENCE INTO DATA(topic).
@@ -145,8 +142,8 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD get_deamon_name.
-    r_result = deamon-deamon_name.
+  METHOD get_daemon_name.
+    r_result = daemon-daemon_name.
   ENDMETHOD.
 
   METHOD handle_message.
@@ -154,9 +151,9 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
     TRY.
         DATA(message_guid) = save_message( i_message ).
       CATCH cx_uuid_error INTO DATA(lcx).
-        RAISE EXCEPTION TYPE zcx_amq_deamon
+        RAISE EXCEPTION TYPE zcx_amq_daemon
           EXPORTING
-            textid = zcx_amq_deamon=>message_error
+            textid = zcx_amq_daemon=>message_error
             text   = lcx->get_text( ).
     ENDTRY.
 
@@ -174,15 +171,15 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
         OTHERS           = 4.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_amq_deamon
+      RAISE EXCEPTION TYPE zcx_amq_daemon
         EXPORTING
-          textid = zcx_amq_deamon=>message_error
+          textid = zcx_amq_daemon=>message_error
           text   = |JOB_OPEN RC = { sy-subrc }|.
     ENDIF.
 
     SUBMIT zamq_handle_message
       WITH p_mguid = message_guid
-      WITH p_dguid = deamon-guid
+      WITH p_dguid = daemon-guid
       USER 'DEVELOPER'
       VIA JOB 'ABAPMQ' NUMBER jobcount
       AND RETURN.
@@ -206,9 +203,9 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
         OTHERS               = 10.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_amq_deamon
+      RAISE EXCEPTION TYPE zcx_amq_daemon
         EXPORTING
-          textid = zcx_amq_deamon=>message_error
+          textid = zcx_amq_daemon=>message_error
           text   = |JOB_CLOSE RC = { sy-subrc }|.
     ENDIF.
 
@@ -231,7 +228,7 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_handler_class.
-    r_result = deamon-handler_class.
+    r_result = daemon-handler_class.
   ENDMETHOD.
 
   METHOD get_broker.
@@ -286,7 +283,7 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
     DATA(topic_strings) = get_topics( ).
     DATA(topics) = VALUE zcl_mqtt_packet_subscribe=>ty_topics( FOR topic IN topic_strings ( topic = topic ) ).
 
-    DATA(log_handle) = appl_log->add_message( |Deamon { get_deamon_name( ) } started at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
+    DATA(log_handle) = appl_log->add_message( |daemon { get_daemon_name( ) } started at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
 
     TRY.
         DO.
@@ -345,7 +342,7 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
         ENDDO.
 
       CATCH cx_apc_error
-            zcx_amq_deamon
+            zcx_amq_daemon
             zcx_mqtt INTO DATA(lcx_apc).
         appl_log->add_message(
           i_message_type = 'E'
@@ -353,7 +350,7 @@ CLASS zcl_amq_deamon IMPLEMENTATION.
         EXIT.
     ENDTRY.
 
-    appl_log->add_message( |Deamon stopped at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
+    appl_log->add_message( |daemon stopped at { sy-datlo DATE = USER } { sy-timlo TIME = USER }| ).
 
   ENDMETHOD.
 

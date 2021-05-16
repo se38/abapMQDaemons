@@ -1,4 +1,4 @@
-FUNCTION Z_AMQ_START_DEAMON.
+FUNCTION Z_AMQ_START_DAEMON.
 *"----------------------------------------------------------------------
 *"*"Local Interface:
 *"  IMPORTING
@@ -8,12 +8,12 @@ FUNCTION Z_AMQ_START_DEAMON.
 *"     VALUE(I_PASSWORD) TYPE  ZAMQ_PASSWORD
 *"----------------------------------------------------------------------
   TRY.
-      zcl_amq_deamon=>get_deamon( i_dguid )->start(
+      zcl_amq_daemon=>get_daemon( i_dguid )->start(
         i_stop  = i_stop
         i_user  = i_user
         i_pass  = i_password
       ).
-    CATCH zcx_amq_deamon ##no_handler.
+    CATCH zcx_amq_daemon ##no_handler.
   ENDTRY.
 
 ENDFUNCTION.

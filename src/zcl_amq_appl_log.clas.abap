@@ -1,9 +1,8 @@
 * See https://github.com/se38/abapMQ_deamon
-
 ********************************************************************************
 * The MIT License (MIT)
 *
-* Copyright (c) 2021 Uwe Fetzer and the abapMQ Deamons Contributors
+* Copyright (c) 2021 Uwe Fetzer and the abapMQ Daemons Contributors
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +22,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 ********************************************************************************
-
-
-"! <p class="shorttext synchronized" lang="en">abapMQ Deamons Applicatio Log</p>
+"! <p class="shorttext synchronized" lang="en">abapMQ Daemons Applicatio Log</p>
 CLASS zcl_amq_appl_log DEFINITION
   PUBLIC
   FINAL

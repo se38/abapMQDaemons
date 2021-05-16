@@ -5,6 +5,7 @@
    <PROGDIR>
     <NAME>ZAMQ_HANDLE_MESSAGE</NAME>
     <DBAPL>S</DBAPL>
+    <DBNA>D$</DBNA>
     <SUBC>1</SUBC>
     <FIXPT>X</FIXPT>
     <LDBNAME>D$S</LDBNAME>
@@ -13,8 +14,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>abapMQ: Start of the message handler</ENTRY>
-     <LENGTH>36</LENGTH>
+     <ENTRY>abapMQ Daemons: Start of the message handler</ENTRY>
+     <LENGTH>44</LENGTH>
     </item>
     <item>
      <ID>S</ID>

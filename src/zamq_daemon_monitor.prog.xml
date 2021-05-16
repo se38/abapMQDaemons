@@ -3,8 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZAMQ_DEAMON_MONITOR</NAME>
+    <NAME>ZAMQ_DAEMON_MONITOR</NAME>
     <DBAPL>S</DBAPL>
+    <DBNA>D$</DBNA>
     <SUBC>1</SUBC>
     <FIXPT>X</FIXPT>
     <LDBNAME>D$S</LDBNAME>
@@ -13,10 +14,10 @@
    <DYNPROS>
     <item>
      <HEADER>
-      <PROGRAM>ZAMQ_DEAMON_MONITOR</PROGRAM>
+      <PROGRAM>ZAMQ_DAEMON_MONITOR</PROGRAM>
       <SCREEN>9000</SCREEN>
       <LANGUAGE>E</LANGUAGE>
-      <DESCRIPT>Deamons</DESCRIPT>
+      <DESCRIPT>Daemons</DESCRIPT>
       <TYPE>N</TYPE>
       <NEXTSCREEN>9000</NEXTSCREEN>
       <LINES>027</LINES>
@@ -77,10 +78,10 @@
     </item>
     <item>
      <HEADER>
-      <PROGRAM>ZAMQ_DEAMON_MONITOR</PROGRAM>
+      <PROGRAM>ZAMQ_DAEMON_MONITOR</PROGRAM>
       <SCREEN>9005</SCREEN>
       <LANGUAGE>E</LANGUAGE>
-      <DESCRIPT>Edit Deamon</DESCRIPT>
+      <DESCRIPT>Edit Daemon</DESCRIPT>
       <TYPE>M</TYPE>
       <NEXTSCREEN>9005</NEXTSCREEN>
       <LINES>027</LINES>
@@ -97,7 +98,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DEAMONS-GUID</NAME>
+       <NAME>ZAMQ_DAEMONS-GUID</NAME>
        <TEXT>GUID________________</TEXT>
        <LINE>001</LINE>
        <COLUMN>001</COLUMN>
@@ -114,7 +115,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DEAMON-GUID</NAME>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-GUID</NAME>
        <TEXT>________________________________</TEXT>
        <LINE>001</LINE>
        <COLUMN>022</COLUMN>
@@ -129,7 +130,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DEAMONS-BROKER_NAME</NAME>
+       <NAME>ZAMQ_DAEMONS-BROKER_NAME</NAME>
        <TEXT>Broker______________</TEXT>
        <LINE>002</LINE>
        <COLUMN>001</COLUMN>
@@ -146,7 +147,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DEAMON-BROKER_NAME</NAME>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-BROKER_NAME</NAME>
        <TEXT>?___________________</TEXT>
        <LINE>002</LINE>
        <COLUMN>022</COLUMN>
@@ -164,8 +165,8 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DEAMONS-DEAMON_NAME</NAME>
-       <TEXT>Deamonname__________</TEXT>
+       <NAME>ZAMQ_DAEMONS-DAEMON_NAME</NAME>
+       <TEXT>Daemonname__________</TEXT>
        <LINE>003</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
@@ -181,7 +182,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DEAMON-DEAMON_NAME</NAME>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-DAEMON_NAME</NAME>
        <TEXT>?___________________</TEXT>
        <LINE>003</LINE>
        <COLUMN>022</COLUMN>
@@ -199,7 +200,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DEAMONS-TOPICS</NAME>
+       <NAME>ZAMQ_DAEMONS-TOPICS</NAME>
        <TEXT>Topics______________</TEXT>
        <ROLLING>X</ROLLING>
        <LINE>004</LINE>
@@ -217,7 +218,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DEAMON-TOPICS</NAME>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-TOPICS</NAME>
        <TEXT>?___________________________________________________________________________________________________________________________________</TEXT>
        <ROLLING>X</ROLLING>
        <LINE>004</LINE>
@@ -236,7 +237,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DEAMONS-HANDLER_CLASS</NAME>
+       <NAME>ZAMQ_DAEMONS-HANDLER_CLASS</NAME>
        <TEXT>Handler_Class_______</TEXT>
        <LINE>005</LINE>
        <COLUMN>001</COLUMN>
@@ -253,7 +254,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DEAMON-HANDLER_CLASS</NAME>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-HANDLER_CLASS</NAME>
        <TEXT>?_____________________________</TEXT>
        <LINE>005</LINE>
        <COLUMN>022</COLUMN>
@@ -272,7 +273,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DEAMONS-STOP_MESSAGE</NAME>
+       <NAME>ZAMQ_DAEMONS-STOP_MESSAGE</NAME>
        <TEXT>Stop_Message________</TEXT>
        <LINE>006</LINE>
        <COLUMN>001</COLUMN>
@@ -289,7 +290,7 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DEAMON-STOP_MESSAGE</NAME>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-STOP_MESSAGE</NAME>
        <TEXT>?___________________</TEXT>
        <LINE>006</LINE>
        <COLUMN>022</COLUMN>
@@ -332,7 +333,7 @@
       </RPY_DYFLOW>
       <RPY_DYFLOW/>
       <RPY_DYFLOW>
-       <LINE>  FIELD app-&gt;screen_fields-deamon-handler_class</LINE>
+       <LINE>  FIELD app-&gt;screen_fields-daemon-handler_class</LINE>
       </RPY_DYFLOW>
       <RPY_DYFLOW>
        <LINE>    MODULE check_handler_class ON REQUEST.</LINE>
@@ -345,7 +346,7 @@
     </item>
     <item>
      <HEADER>
-      <PROGRAM>ZAMQ_DEAMON_MONITOR</PROGRAM>
+      <PROGRAM>ZAMQ_DAEMON_MONITOR</PROGRAM>
       <SCREEN>9010</SCREEN>
       <LANGUAGE>E</LANGUAGE>
       <DESCRIPT>Broker</DESCRIPT>
@@ -409,7 +410,7 @@
     </item>
     <item>
      <HEADER>
-      <PROGRAM>ZAMQ_DEAMON_MONITOR</PROGRAM>
+      <PROGRAM>ZAMQ_DAEMON_MONITOR</PROGRAM>
       <SCREEN>9015</SCREEN>
       <LANGUAGE>E</LANGUAGE>
       <DESCRIPT>Edit Broker</DESCRIPT>
@@ -580,7 +581,7 @@
     </item>
     <item>
      <HEADER>
-      <PROGRAM>ZAMQ_DEAMON_MONITOR</PROGRAM>
+      <PROGRAM>ZAMQ_DAEMON_MONITOR</PROGRAM>
       <SCREEN>9020</SCREEN>
       <LANGUAGE>E</LANGUAGE>
       <DESCRIPT>Popup for user/password</DESCRIPT>
@@ -786,6 +787,12 @@
       <TEXT_NAME>ICON_CANCEL</TEXT_NAME>
       <ICON_ID>@0W@</ICON_ID>
       <FUN_TEXT>Cancel</FUN_TEXT>
+     </RSMPE_FUNT>
+     <RSMPE_FUNT>
+      <CODE>DAEMONS</CODE>
+      <TEXTNO>001</TEXTNO>
+      <TEXT_TYPE>S</TEXT_TYPE>
+      <FUN_TEXT>Daemons</FUN_TEXT>
      </RSMPE_FUNT>
      <RSMPE_FUNT>
       <CODE>DEACTIVATE</CODE>
@@ -1025,7 +1032,7 @@
      <RSMPE_PFK>
       <CODE>000001</CODE>
       <PFNO>21</PFNO>
-      <FUNCODE>DEAMONS</FUNCODE>
+      <FUNCODE>DAEMONS</FUNCODE>
       <FUNNO>001</FUNNO>
      </RSMPE_PFK>
      <RSMPE_PFK>
@@ -1102,11 +1109,11 @@
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>9000</STATUS>
-      <FUNCTION>DEACTIVATE</FUNCTION>
+      <FUNCTION>DAEMONS</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>9000</STATUS>
-      <FUNCTION>DEAMONS</FUNCTION>
+      <FUNCTION>DEACTIVATE</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>9000</STATUS>
@@ -1166,6 +1173,10 @@
      </RSMPE_STAF>
      <RSMPE_STAF>
       <STATUS>9010</STATUS>
+      <FUNCTION>DAEMONS</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
+      <STATUS>9010</STATUS>
       <FUNCTION>DEACTIVATE</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
@@ -1193,6 +1204,10 @@
       <FUNCTION>NEW</FUNCTION>
      </RSMPE_STAF>
      <RSMPE_STAF>
+      <STATUS>9010</STATUS>
+      <FUNCTION>TOGGLE</FUNCTION>
+     </RSMPE_STAF>
+     <RSMPE_STAF>
       <STATUS>9015</STATUS>
       <FUNCTION>CANCEL</FUNCTION>
      </RSMPE_STAF>
@@ -1218,20 +1233,20 @@
       <OBJ_TYPE>A</OBJ_TYPE>
       <OBJ_CODE>000001</OBJ_CODE>
       <MODAL>D</MODAL>
-      <INT_NOTE>Deamons</INT_NOTE>
+      <INT_NOTE>Daemons</INT_NOTE>
      </RSMPE_ATRT>
      <RSMPE_ATRT>
       <OBJ_TYPE>P</OBJ_TYPE>
       <OBJ_CODE>000001</OBJ_CODE>
       <MODAL>D</MODAL>
-      <INT_NOTE>Deamons</INT_NOTE>
+      <INT_NOTE>Daemons</INT_NOTE>
      </RSMPE_ATRT>
      <RSMPE_ATRT>
       <OBJ_TYPE>B</OBJ_TYPE>
       <OBJ_CODE>000001</OBJ_CODE>
       <SUB_CODE>0001</SUB_CODE>
       <MODAL>D</MODAL>
-      <INT_NOTE>Deamons</INT_NOTE>
+      <INT_NOTE>Daemons</INT_NOTE>
      </RSMPE_ATRT>
      <RSMPE_ATRT>
       <OBJ_TYPE>P</OBJ_TYPE>
@@ -1263,24 +1278,24 @@
       <OBJ_TYPE>P</OBJ_TYPE>
       <OBJ_CODE>000004</OBJ_CODE>
       <MODAL>P</MODAL>
-      <INT_NOTE>Edit Deamons</INT_NOTE>
+      <INT_NOTE>Edit Daemons</INT_NOTE>
      </RSMPE_ATRT>
      <RSMPE_ATRT>
       <OBJ_TYPE>B</OBJ_TYPE>
       <OBJ_CODE>000004</OBJ_CODE>
       <SUB_CODE>0001</SUB_CODE>
       <MODAL>P</MODAL>
-      <INT_NOTE>Edit Deamons</INT_NOTE>
+      <INT_NOTE>Edit Daemons</INT_NOTE>
      </RSMPE_ATRT>
     </DOC>
     <TIT>
      <RSMPE_TITT>
       <CODE>9000</CODE>
-      <TEXT>Message Queue Deamons</TEXT>
+      <TEXT>Message Queue Daemons</TEXT>
      </RSMPE_TITT>
      <RSMPE_TITT>
       <CODE>9005</CODE>
-      <TEXT>Edit Deamons</TEXT>
+      <TEXT>Edit Daemons</TEXT>
      </RSMPE_TITT>
      <RSMPE_TITT>
       <CODE>9010</CODE>
@@ -1299,7 +1314,7 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>abapMQ Deamon Monitor</ENTRY>
+     <ENTRY>abapMQ Daemon Monitor</ENTRY>
      <LENGTH>21</LENGTH>
     </item>
    </TPOOL>

@@ -10,7 +10,7 @@
     <SCRLEN1>04</SCRLEN1>
     <SCRLEN2>04</SCRLEN2>
     <SCRLEN3>04</SCRLEN3>
-    <DDTEXT>abapMQ: Broker User</DDTEXT>
+    <DDTEXT>abapMQ Daemons: Broker User</DDTEXT>
     <REPTEXT>User</REPTEXT>
     <SCRTEXT_S>User</SCRTEXT_S>
     <SCRTEXT_M>User</SCRTEXT_M>

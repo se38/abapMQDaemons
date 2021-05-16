@@ -1,7 +1,7 @@
 *&---------------------------------------------------------------------*
-*& Report zamq_deamon_monitor
+*& Report zamq_daemon_monitor
 *&---------------------------------------------------------------------*
-*& Deamon monitor
+*& Daemon monitor
 *&---------------------------------------------------------------------*
 ********************************************************************************
 * The MIT License (MIT)
@@ -26,7 +26,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 ********************************************************************************
-REPORT zamq_deamon_monitor.
+REPORT zamq_daemon_monitor.
 
 CLASS lcl_app DEFINITION CREATE PUBLIC.
 
@@ -55,46 +55,46 @@ CLASS lcl_app DEFINITION CREATE PUBLIC.
     METHODS user_command_9020.
 
   PRIVATE SECTION.
-    DATA deamons TYPE STANDARD TABLE OF zamq_deamons WITH EMPTY KEY.
-    DATA alv_deamons TYPE REF TO cl_salv_table.
+    DATA daemons TYPE STANDARD TABLE OF zamq_daemons WITH EMPTY KEY.
+    DATA alv_daemons TYPE REF TO cl_salv_table.
     DATA broker TYPE STANDARD TABLE OF zamq_broker WITH EMPTY KEY.
     DATA alv_broker TYPE REF TO cl_salv_table.
 
     DATA canceled TYPE abap_bool.
     DATA change_ind TYPE cdchngind.
 
-    METHODS get_deamons
-      RETURNING VALUE(r_result) LIKE deamons.
+    METHODS get_daemons
+      RETURNING VALUE(r_result) LIKE daemons.
     METHODS get_brokers
       RETURNING VALUE(r_result) LIKE broker.
-    METHODS create_alv_deamons
-      CHANGING  c_deamons       LIKE deamons
+    METHODS create_alv_daemons
+      CHANGING  c_daemons       LIKE daemons
       RETURNING VALUE(r_result) TYPE REF TO cl_salv_table.
     METHODS create_alv_broker
       CHANGING  c_broker        LIKE broker
       RETURNING VALUE(r_result) TYPE REF TO cl_salv_table.
     METHODS toggle_activation.
-    METHODS activate_deamon
-      IMPORTING i_deamon TYPE REF TO zamq_deamons.
-    METHODS deactivate_deamon
-      IMPORTING i_deamon TYPE REF TO zamq_deamons.
+    METHODS activate_daemon
+      IMPORTING i_daemon TYPE REF TO zamq_daemons.
+    METHODS deactivate_daemon
+      IMPORTING i_daemon TYPE REF TO zamq_daemons.
     METHODS get_broker
       IMPORTING i_brokername    TYPE zamq_broker_name
       RETURNING VALUE(r_result) TYPE zamq_broker.
     METHODS insert_broker
-      RAISING zcx_amq_deamon.
+      RAISING zcx_amq_daemon.
     METHODS get_selected_broker
       RETURNING VALUE(r_result) TYPE zamq_broker.
     METHODS delete_broker.
     METHODS update_broker.
-    METHODS insert_deamon.
-    METHODS update_deamon.
-    METHODS delete_deamon.
-    METHODS get_selected_deamon
-      RETURNING VALUE(r_result) TYPE zamq_deamons.
+    METHODS insert_daemon.
+    METHODS update_daemon.
+    METHODS delete_daemon.
+    METHODS get_selected_daemon
+      RETURNING VALUE(r_result) TYPE zamq_daemons.
     METHODS is_if_implemented
       IMPORTING i_class_name     TYPE seoclsname
-                i_interface_name TYPE seoclsname DEFAULT 'ZIF_AMQ_DEAMON'
+                i_interface_name TYPE seoclsname DEFAULT 'ZIF_AMQ_DAEMON'
       RETURNING VALUE(r_result)  TYPE abap_bool.
 
 
@@ -119,13 +119,13 @@ CLASS lcl_app IMPLEMENTATION.
     IF sy-pfkey <> '9000'.
       DATA excluded TYPE STANDARD TABLE OF syst_ucomm WITH EMPTY KEY.
 
-      excluded = VALUE #( ( 'DEAMONS' ) ).
+      excluded = VALUE #( ( 'DAEMONS' ) ).
       SET PF-STATUS '9000' EXCLUDING excluded.
       SET TITLEBAR '9000'.
 
-      IF alv_deamons IS NOT BOUND.
-        deamons = get_deamons( ).
-        alv_deamons = create_alv_deamons( CHANGING c_deamons = deamons ).
+      IF alv_daemons IS NOT BOUND.
+        daemons = get_daemons( ).
+        alv_daemons = create_alv_daemons( CHANGING c_daemons = daemons ).
       ENDIF.
 
     ENDIF.
@@ -137,7 +137,7 @@ CLASS lcl_app IMPLEMENTATION.
     CASE sy-ucomm.
       WHEN 'BACK' OR 'EXIT'.
         LEAVE PROGRAM.
-      WHEN 'DEAMONS'.
+      WHEN 'DAEMONS'.
         LEAVE TO SCREEN 9000.
       WHEN 'BROKER'.
         LEAVE TO SCREEN 9010.
@@ -147,9 +147,9 @@ CLASS lcl_app IMPLEMENTATION.
       WHEN 'NEW'.
         change_ind = 'I'.
         CASE sy-pfkey.
-          WHEN '9000'.          "Deamons
-            CLEAR screen_fields-deamon.
-            screen_fields-deamon-stop_message = 'STOP'.
+          WHEN '9000'.          "daemons
+            CLEAR screen_fields-daemon.
+            screen_fields-daemon-stop_message = 'STOP'.
             CALL SCREEN 9005
              STARTING AT 1 1.
           WHEN '9010'.          "Broker
@@ -161,11 +161,11 @@ CLASS lcl_app IMPLEMENTATION.
       WHEN 'EDIT'.
         change_ind = 'U'.
         CASE sy-pfkey.
-          WHEN '9000'.          "Deamons
-            screen_fields-deamon = get_selected_deamon( ).
-            CHECK screen_fields-deamon IS NOT INITIAL.
-            IF screen_fields-deamon-active = icon_oo_object.
-              MESSAGE i005(zamq_deamon) WITH screen_fields-deamon-deamon_name.
+          WHEN '9000'.          "daemons
+            screen_fields-daemon = get_selected_daemon( ).
+            CHECK screen_fields-daemon IS NOT INITIAL.
+            IF screen_fields-daemon-active = icon_oo_object.
+              MESSAGE i005(zamq_daemon) WITH screen_fields-daemon-daemon_name.
               RETURN.
             ENDIF.
             CALL SCREEN 9005
@@ -179,11 +179,11 @@ CLASS lcl_app IMPLEMENTATION.
       WHEN 'DELETE_ROW'.
         change_ind = 'D'.
         CASE sy-pfkey.
-          WHEN '9000'.          "Deamons
-            screen_fields-deamon = get_selected_deamon( ).
-            CHECK screen_fields-deamon IS NOT INITIAL.
-            IF screen_fields-deamon-active = icon_oo_object.
-              MESSAGE i005(zamq_deamon) WITH screen_fields-deamon-deamon_name.
+          WHEN '9000'.          "daemons
+            screen_fields-daemon = get_selected_daemon( ).
+            CHECK screen_fields-daemon IS NOT INITIAL.
+            IF screen_fields-daemon-active = icon_oo_object.
+              MESSAGE i005(zamq_daemon) WITH screen_fields-daemon-daemon_name.
               RETURN.
             ENDIF.
             CALL SCREEN 9005
@@ -192,7 +192,7 @@ CLASS lcl_app IMPLEMENTATION.
             screen_fields-broker = get_selected_broker( ).
             CHECK screen_fields-broker IS NOT INITIAL.
 
-            SELECT FROM zamq_deamons
+            SELECT FROM zamq_daemons
               FIELDS @abap_true
               WHERE broker_name = @screen_fields-broker-broker_name
               INTO @DATA(broker_in_use)
@@ -201,7 +201,7 @@ CLASS lcl_app IMPLEMENTATION.
             ENDSELECT.
 
             IF broker_in_use = abap_true.
-              MESSAGE i006(zamq_deamon) WITH screen_fields-broker-broker_name.
+              MESSAGE i006(zamq_daemon) WITH screen_fields-broker-broker_name.
               RETURN.
             ENDIF.
 
@@ -214,16 +214,16 @@ CLASS lcl_app IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD get_deamons.
+  METHOD get_daemons.
 
-    SELECT FROM zamq_deamons
+    SELECT FROM zamq_daemons
       FIELDS *
-      ORDER BY broker_name, deamon_name
+      ORDER BY broker_name, daemon_name
       INTO TABLE @r_result.
 
   ENDMETHOD.
 
-  METHOD create_alv_deamons.
+  METHOD create_alv_daemons.
 
     TRY.
         cl_salv_table=>factory(
@@ -232,7 +232,7 @@ CLASS lcl_app IMPLEMENTATION.
           IMPORTING
             r_salv_table = r_result
           CHANGING
-            t_table      = c_deamons
+            t_table      = c_daemons
         ).
 
         r_result->get_columns( )->get_column( 'GUID' )->set_technical( abap_true ).
@@ -305,41 +305,41 @@ CLASS lcl_app IMPLEMENTATION.
 
   METHOD toggle_activation.
 
-    alv_deamons->get_metadata( ).        "needed after PAI
-    DATA(rows) = alv_deamons->get_selections( )->get_selected_rows( ).
+    alv_daemons->get_metadata( ).        "needed after PAI
+    DATA(rows) = alv_daemons->get_selections( )->get_selected_rows( ).
 
     CHECK rows IS NOT INITIAL.
 
-    DATA(deamon) = REF #( deamons[ rows[ 1 ] ] ).
+    DATA(daemon) = REF #( daemons[ rows[ 1 ] ] ).
 
-    IF deamon->active = icon_dummy.
-      activate_deamon( deamon ).
+    IF daemon->active = icon_dummy.
+      activate_daemon( daemon ).
     ELSE.
-      deactivate_deamon( deamon ).
+      deactivate_daemon( daemon ).
     ENDIF.
 
-    alv_deamons->refresh( ).
+    alv_daemons->refresh( ).
 
   ENDMETHOD.
 
 
-  METHOD activate_deamon.
+  METHOD activate_daemon.
 
     CLEAR screen_fields.
     CALL SCREEN 9020 STARTING AT 5 5.
 
     IF canceled = abap_false.
-      i_deamon->active = icon_oo_object.
+      i_daemon->active = icon_oo_object.
 
-      UPDATE zamq_deamons
+      UPDATE zamq_daemons
         SET active = @icon_oo_object
-        WHERE guid = @i_deamon->guid.
+        WHERE guid = @i_daemon->guid.
 
-      CALL FUNCTION 'Z_AMQ_START_DEAMON'
-        STARTING NEW TASK 'START_DEAMON'
+      CALL FUNCTION 'Z_AMQ_START_DAEMON'
+        STARTING NEW TASK 'START_DAEMON'
         EXPORTING
-          i_dguid    = i_deamon->guid
-          i_stop     = i_deamon->stop_message
+          i_dguid    = i_daemon->guid
+          i_stop     = i_daemon->stop_message
           i_user     = app->screen_fields-broker_user
           i_password = app->screen_fields-broker_password.
     ENDIF.
@@ -347,14 +347,14 @@ CLASS lcl_app IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD deactivate_deamon.
+  METHOD deactivate_daemon.
 
     CLEAR screen_fields.
     CALL SCREEN 9020 STARTING AT 5 5.
 
     IF canceled = abap_false.
 
-      DATA(broker) = get_broker( i_deamon->broker_name ).
+      DATA(broker) = get_broker( i_daemon->broker_name ).
 
       TRY.
           DATA(transport) = zcl_mqtt_transport_tcp=>create(
@@ -373,12 +373,12 @@ CLASS lcl_app IMPLEMENTATION.
           DATA(connack) = CAST zcl_mqtt_packet_connack( transport->listen( 10 ) ).
 
           IF connack->get_return_code( ) = '00'.
-            SPLIT i_deamon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
+            SPLIT i_daemon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
             TRANSLATE first_topic USING '/../+**+'.
 
             DATA(message) = VALUE zif_mqtt_packet=>ty_message(
               topic   = first_topic
-              message = cl_binary_convert=>string_to_xstring_utf8( |{ i_deamon->stop_message }| ) ).
+              message = cl_binary_convert=>string_to_xstring_utf8( |{ i_daemon->stop_message }| ) ).
 
             transport->send( NEW zcl_mqtt_packet_publish( is_message = message ) ).
 
@@ -395,11 +395,11 @@ CLASS lcl_app IMPLEMENTATION.
 
       ENDTRY.
 
-      i_deamon->active = icon_dummy.
+      i_daemon->active = icon_dummy.
 
-      UPDATE zamq_deamons
+      UPDATE zamq_daemons
         SET active = @icon_dummy
-        WHERE guid = @i_deamon->guid.
+        WHERE guid = @i_daemon->guid.
 
     ENDIF.
 
@@ -501,19 +501,19 @@ CLASS lcl_app IMPLEMENTATION.
     TRY.
         CASE change_ind.
           WHEN 'I'.
-            insert_deamon( ).
+            insert_daemon( ).
           WHEN 'U'.
-            update_deamon( ).
+            update_daemon( ).
           WHEN 'D'.
-            delete_deamon( ).
+            delete_daemon( ).
         ENDCASE.
 
-      CATCH zcx_amq_deamon INTO DATA(lcx).
+      CATCH zcx_amq_daemon INTO DATA(lcx).
         MESSAGE lcx TYPE 'W' DISPLAY LIKE 'E'.
         RETURN.
     ENDTRY.
 
-    alv_deamons->refresh( ).
+    alv_daemons->refresh( ).
     LEAVE TO SCREEN 0.
 
   ENDMETHOD.
@@ -530,7 +530,7 @@ CLASS lcl_app IMPLEMENTATION.
             delete_broker( ).
         ENDCASE.
 
-      CATCH zcx_amq_deamon INTO DATA(lcx).
+      CATCH zcx_amq_daemon INTO DATA(lcx).
         MESSAGE lcx TYPE 'W' DISPLAY LIKE 'E'.
         RETURN.
     ENDTRY.
@@ -549,9 +549,9 @@ CLASS lcl_app IMPLEMENTATION.
       INTO @DATA(exists).
 
     IF exists = abap_true.
-      RAISE EXCEPTION TYPE zcx_amq_deamon
+      RAISE EXCEPTION TYPE zcx_amq_daemon
         EXPORTING
-          textid      = zcx_amq_deamon=>broker_exists
+          textid      = zcx_amq_daemon=>broker_exists
           broker_name = screen_fields-broker-broker_name.
     ENDIF.
 
@@ -598,59 +598,59 @@ CLASS lcl_app IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD insert_deamon.
+  METHOD insert_daemon.
 
     TRY.
-        screen_fields-deamon-guid = cl_system_uuid=>create_uuid_x16_static( ).
+        screen_fields-daemon-guid = cl_system_uuid=>create_uuid_x16_static( ).
       CATCH cx_uuid_error ##no_handler.
     ENDTRY.
 
-    screen_fields-deamon-active = icon_dummy.
-    INSERT zamq_deamons FROM @screen_fields-deamon.
-    INSERT screen_fields-deamon INTO TABLE deamons.
+    screen_fields-daemon-active = icon_dummy.
+    INSERT zamq_daemons FROM @screen_fields-daemon.
+    INSERT screen_fields-daemon INTO TABLE daemons.
 
   ENDMETHOD.
 
 
-  METHOD update_deamon.
+  METHOD update_daemon.
 
-    UPDATE zamq_deamons FROM @screen_fields-deamon.
+    UPDATE zamq_daemons FROM @screen_fields-daemon.
 
-    DATA(deamon_line) = REF #( deamons[ guid = screen_fields-deamon-guid ] ).
-    deamon_line->* = CORRESPONDING #( screen_fields-deamon ).
-
-  ENDMETHOD.
-
-
-  METHOD delete_deamon.
-
-    "Todo: don't delete active deamons
-    DELETE FROM zamq_deamons
-      WHERE guid = @screen_fields-deamon-guid.
-
-    DELETE deamons
-      WHERE guid = screen_fields-deamon-guid.
+    DATA(daemon_line) = REF #( daemons[ guid = screen_fields-daemon-guid ] ).
+    daemon_line->* = CORRESPONDING #( screen_fields-daemon ).
 
   ENDMETHOD.
 
 
-  METHOD get_selected_deamon.
+  METHOD delete_daemon.
+
+    "Todo: don't delete active daemons
+    DELETE FROM zamq_daemons
+      WHERE guid = @screen_fields-daemon-guid.
+
+    DELETE daemons
+      WHERE guid = screen_fields-daemon-guid.
+
+  ENDMETHOD.
+
+
+  METHOD get_selected_daemon.
 
     CLEAR r_result.
 
-    alv_deamons->get_metadata( ).        "needed after PAI
-    DATA(rows) = alv_deamons->get_selections( )->get_selected_rows( ).
+    alv_daemons->get_metadata( ).        "needed after PAI
+    DATA(rows) = alv_daemons->get_selections( )->get_selected_rows( ).
     CHECK rows IS NOT INITIAL.
 
-    r_result = deamons[ rows[ 1 ] ].
+    r_result = daemons[ rows[ 1 ] ].
 
   ENDMETHOD.
 
   METHOD check_handler_class.
 
-    IF NOT is_if_implemented( screen_fields-deamon-handler_class ).
-      "Interface ZIF_AMQ_DEAMON not implented in class &1
-      MESSAGE e007(zamq_deamon) WITH screen_fields-deamon-handler_class.
+    IF NOT is_if_implemented( screen_fields-daemon-handler_class ).
+      "Interface ZIF_AMQ_daemon not implemented in class &1
+      MESSAGE e007(zamq_daemon) WITH screen_fields-daemon-handler_class.
     ENDIF.
 
   ENDMETHOD.

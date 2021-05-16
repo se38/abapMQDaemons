@@ -3,11 +3,12 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>LZAMQ_DEAMONSTOP</NAME>
+    <NAME>SAPLZAMQ_DAEMONS</NAME>
     <DBAPL>S</DBAPL>
     <DBNA>D$</DBNA>
-    <SUBC>I</SUBC>
+    <SUBC>F</SUBC>
     <APPL>S</APPL>
+    <RLOAD>E</RLOAD>
     <FIXPT>X</FIXPT>
     <LDBNAME>D$S</LDBNAME>
     <UCCHECK>X</UCCHECK>

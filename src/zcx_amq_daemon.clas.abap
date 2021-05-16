@@ -1,9 +1,8 @@
-* See https://github.com/se38/abapMQ_deamon
-
+* See https://github.com/se38/abapMQ_daemon
 ********************************************************************************
 * The MIT License (MIT)
 *
-* Copyright (c) 2021 Uwe Fetzer and the abapMQ Deamons Contributors
+* Copyright (c) 2021 Uwe Fetzer and the abapMQ Daemons Contributors
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +22,8 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 ********************************************************************************
-
-
-"! <p class="shorttext synchronized" lang="en">abapMQ Deamons Message Class</p>
-CLASS zcx_amq_deamon DEFINITION
+"! <p class="shorttext synchronized" lang="en">abapMQ Daemons Message Class</p>
+CLASS zcx_amq_daemon DEFINITION
   PUBLIC
   INHERITING FROM cx_static_check
   FINAL
@@ -42,16 +39,16 @@ CLASS zcx_amq_deamon DEFINITION
     DATA broker_name TYPE zamq_broker_name.
 
     CONSTANTS:
-      BEGIN OF deamon_not_found,
-        msgid TYPE symsgid VALUE 'ZAMQ_DEAMON',
+      BEGIN OF daemon_not_found,
+        msgid TYPE symsgid VALUE 'ZAMQ_DAEMON',
         msgno TYPE symsgno VALUE '001',
         attr1 TYPE scx_attrname VALUE 'GUID',
         attr2 TYPE scx_attrname VALUE 'attr2',
         attr3 TYPE scx_attrname VALUE 'attr3',
         attr4 TYPE scx_attrname VALUE 'attr4',
-      END OF deamon_not_found,
+      END OF daemon_not_found,
       BEGIN OF message_not_found,
-        msgid TYPE symsgid VALUE 'ZAMQ_DEAMON',
+        msgid TYPE symsgid VALUE 'ZAMQ_DAEMON',
         msgno TYPE symsgno VALUE '002',
         attr1 TYPE scx_attrname VALUE 'GUID',
         attr2 TYPE scx_attrname VALUE 'attr2',
@@ -59,7 +56,7 @@ CLASS zcx_amq_deamon DEFINITION
         attr4 TYPE scx_attrname VALUE 'attr4',
       END OF message_not_found,
       BEGIN OF message_error,
-        msgid TYPE symsgid VALUE 'ZAMQ_DEAMON',
+        msgid TYPE symsgid VALUE 'ZAMQ_DAEMON',
         msgno TYPE symsgno VALUE '003',
         attr1 TYPE scx_attrname VALUE 'TEXT',
         attr2 TYPE scx_attrname VALUE 'attr2',
@@ -67,7 +64,7 @@ CLASS zcx_amq_deamon DEFINITION
         attr4 TYPE scx_attrname VALUE 'attr4',
       END OF message_error,
       BEGIN OF broker_exists,
-        msgid TYPE symsgid VALUE 'ZAMQ_DEAMON',
+        msgid TYPE symsgid VALUE 'ZAMQ_DAEMON',
         msgno TYPE symsgno VALUE '004',
         attr1 TYPE scx_attrname VALUE 'BROKER_NAME',
         attr2 TYPE scx_attrname VALUE 'attr2',
@@ -87,7 +84,7 @@ ENDCLASS.
 
 
 
-CLASS zcx_amq_deamon IMPLEMENTATION.
+CLASS zcx_amq_daemon IMPLEMENTATION.
 
 
   METHOD constructor ##ADT_SUPPRESS_GENERATION.

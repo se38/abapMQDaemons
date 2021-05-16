@@ -29,7 +29,7 @@
 REPORT zamq_handle_message.
 
 PARAMETERS: p_mguid TYPE guid_16.     "Message GUID
-PARAMETERS: p_dguid TYPE guid_16.     "Deamon GUID
+PARAMETERS: p_dguid TYPE guid_16.     "Daemon GUID
 
 CLASS app DEFINITION CREATE PUBLIC.
 
@@ -40,7 +40,7 @@ CLASS app DEFINITION CREATE PUBLIC.
     METHODS get_message
       IMPORTING i_message_guid  TYPE guid_16
       RETURNING VALUE(r_result) TYPE zif_mqtt_packet=>ty_message
-      RAISING   zcx_amq_deamon.
+      RAISING   zcx_amq_daemon.
     METHODS delete_message
       IMPORTING i_message_guid TYPE guid_16.
 
@@ -53,21 +53,21 @@ CLASS app IMPLEMENTATION.
   METHOD main.
 
     TRY.
-        DATA(deamon) = zcl_amq_deamon=>get_deamon( p_dguid ).
+        DATA(daemon) = zcl_amq_daemon=>get_daemon( p_dguid ).
 
-        DATA(handler_class_name) = deamon->get_handler_class( ).
-        DATA handler TYPE REF TO zif_amq_deamon.
+        DATA(handler_class_name) = daemon->get_handler_class( ).
+        DATA handler TYPE REF TO zif_amq_daemon.
         CREATE OBJECT handler TYPE (handler_class_name).
 
         handler->on_receive(
           EXPORTING
             i_message     = get_message( p_mguid )
-            i_deamon_guid = p_dguid
+            i_daemon_guid = p_dguid
         ).
 
         delete_message( p_mguid ).
 
-      CATCH zcx_amq_deamon
+      CATCH zcx_amq_daemon
             cx_sy_create_object_error INTO DATA(lcx).
         MESSAGE lcx TYPE 'E'.
     ENDTRY.
@@ -82,9 +82,9 @@ CLASS app IMPLEMENTATION.
       WHERE guid = @i_message_guid.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE zcx_amq_deamon
+      RAISE EXCEPTION TYPE zcx_amq_daemon
         EXPORTING
-          textid = zcx_amq_deamon=>message_not_found
+          textid = zcx_amq_daemon=>message_not_found
           guid   = i_message_guid.
     ENDIF.
 

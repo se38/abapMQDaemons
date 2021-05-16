@@ -26,10 +26,10 @@
 
 
 "! <p class="shorttext synchronized" lang="en">abapMQ Deamons interface</p>
-INTERFACE zif_amq_deamon
+INTERFACE zif_amq_daemon
   PUBLIC .
   METHODS on_receive
     IMPORTING i_message     TYPE zif_mqtt_packet=>ty_message
-              i_deamon_guid TYPE guid_16 OPTIONAL.
+              i_daemon_guid TYPE guid_16 OPTIONAL.
 
 ENDINTERFACE.

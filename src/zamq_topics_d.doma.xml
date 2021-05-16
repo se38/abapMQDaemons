@@ -7,7 +7,7 @@
     <DDLANGUAGE>E</DDLANGUAGE>
     <DATATYPE>STRG</DATATYPE>
     <LOWERCASE>X</LOWERCASE>
-    <DDTEXT>abapMQ Deamon: Topics separated by comma</DDTEXT>
+    <DDTEXT>abapMQ Daemon: Topics separated by comma</DDTEXT>
    </DD01V>
   </asx:values>
  </asx:abap>

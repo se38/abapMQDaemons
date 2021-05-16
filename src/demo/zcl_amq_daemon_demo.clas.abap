@@ -1,10 +1,10 @@
-CLASS zcl_amq_deamon_demo DEFINITION
+CLASS zcl_amq_daemon_demo DEFINITION
   PUBLIC
   FINAL
   CREATE PUBLIC .
 
   PUBLIC SECTION.
-    INTERFACES zif_amq_deamon.
+    INTERFACES zif_amq_daemon.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -12,15 +12,15 @@ ENDCLASS.
 
 
 
-CLASS zcl_amq_deamon_demo IMPLEMENTATION.
+CLASS zcl_amq_daemon_demo IMPLEMENTATION.
 
-  METHOD zif_amq_deamon~on_receive.
+  METHOD zif_amq_daemon~on_receive.
 
     DATA(appl_log) = NEW zcl_amq_appl_log( ).
 
     TRY.
-        DATA(deamon) = zcl_amq_deamon=>get_deamon( i_deamon_guid ).
-      CATCH zcx_amq_deamon INTO DATA(lcx).
+        DATA(daemon) = zcl_amq_daemon=>get_daemon( i_daemon_guid ).
+      CATCH zcx_amq_daemon INTO DATA(lcx).
         appl_log->add_message(
           i_message_type = 'E'
           i_text         = lcx->get_text( ) ).
@@ -28,7 +28,7 @@ CLASS zcl_amq_deamon_demo IMPLEMENTATION.
     ENDTRY.
 
     DATA(message_string) = cl_binary_convert=>xstring_utf8_to_string( i_message-message ).
-    appl_log->add_message( |Deamon { deamon->get_deamon_name(  ) } Topic { i_message-topic } Message { message_string }| ).
+    appl_log->add_message( |Daemon { daemon->get_daemon_name(  ) } Topic { i_message-topic } Message { message_string }| ).
 
   ENDMETHOD.
 

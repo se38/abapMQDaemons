@@ -134,12 +134,6 @@ CLASS zcl_amq_daemon IMPLEMENTATION.
 
   METHOD get_topics.
     SPLIT daemon-topics AT ',' INTO TABLE r_result.
-
-    "swap slash and dot
-    LOOP AT r_result REFERENCE INTO DATA(topic).
-      TRANSLATE topic->* USING '/../+**+'.
-    ENDLOOP.
-
   ENDMETHOD.
 
   METHOD get_daemon_name.
@@ -221,8 +215,6 @@ CLASS zcl_amq_daemon IMPLEMENTATION.
       message = i_message-message
     ).
 
-    "swap dot and slash, plus and star
-    TRANSLATE message-topic USING '/../+**+'.
     INSERT zamq_messages FROM @message.
 
   ENDMETHOD.

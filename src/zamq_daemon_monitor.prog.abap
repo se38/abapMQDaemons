@@ -149,6 +149,7 @@ CLASS lcl_app IMPLEMENTATION.
         CASE sy-pfkey.
           WHEN '9000'.          "daemons
             CLEAR screen_fields-daemon.
+            screen_fields-daemon-bgr_user = sy-uname.
             screen_fields-daemon-stop_message = 'STOP'.
             CALL SCREEN 9005
              STARTING AT 1 1.

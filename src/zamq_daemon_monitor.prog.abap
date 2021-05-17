@@ -375,7 +375,6 @@ CLASS lcl_app IMPLEMENTATION.
 
           IF connack->get_return_code( ) = '00'.
             SPLIT i_daemon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
-            TRANSLATE first_topic USING '/../+**+'.
 
             DATA(message) = VALUE zif_mqtt_packet=>ty_message(
               topic   = first_topic

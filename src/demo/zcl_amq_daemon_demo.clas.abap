@@ -28,7 +28,7 @@ CLASS zcl_amq_daemon_demo IMPLEMENTATION.
     ENDTRY.
 
     DATA(message_string) = cl_binary_convert=>xstring_utf8_to_string( i_message-message ).
-    appl_log->add_message( |Daemon { daemon->get_daemon_name(  ) } Topic { i_message-topic } Message { message_string }| ).
+    appl_log->add_message( |Daemon "{ daemon->get_daemon_name(  ) }" Topic "{ i_message-topic }" Message "{ message_string }"| ).
 
   ENDMETHOD.
 

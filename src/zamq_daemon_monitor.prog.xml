@@ -21,7 +21,7 @@
       <TYPE>N</TYPE>
       <NEXTSCREEN>9000</NEXTSCREEN>
       <LINES>027</LINES>
-      <COLUMNS>120</COLUMNS>
+      <COLUMNS>200</COLUMNS>
      </HEADER>
      <CONTAINERS>
       <RPY_DYCATT>
@@ -34,7 +34,7 @@
        <ELEMENT_OF>SCREEN</ELEMENT_OF>
        <LINE>001</LINE>
        <COLUMN>001</COLUMN>
-       <LENGTH>120</LENGTH>
+       <LENGTH>200</LENGTH>
        <HEIGHT>027</HEIGHT>
        <C_RESIZE_V>X</C_RESIZE_V>
        <C_RESIZE_H>X</C_RESIZE_H>
@@ -201,7 +201,7 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-TOPICS</NAME>
-       <TEXT>Topics______________</TEXT>
+       <TEXT>Topic(s)____________</TEXT>
        <ROLLING>X</ROLLING>
        <LINE>004</LINE>
        <COLUMN>001</COLUMN>
@@ -237,9 +237,43 @@
        <CONT_TYPE>SCREEN</CONT_TYPE>
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
+       <NAME>ZAMQ_DAEMONS-STOP_MESSAGE</NAME>
+       <TEXT>Stop_Message________</TEXT>
+       <LINE>005</LINE>
+       <COLUMN>001</COLUMN>
+       <LENGTH>020</LENGTH>
+       <VISLENGTH>020</VISLENGTH>
+       <HEIGHT>001</HEIGHT>
+       <FORMAT>CHAR</FORMAT>
+       <FROM_DICT>X</FROM_DICT>
+       <MODIFIC>2</MODIFIC>
+       <REQU_ENTRY>N</REQU_ENTRY>
+       <LABELLEFT>X</LABELLEFT>
+      </RPY_DYFATC>
+      <RPY_DYFATC>
+       <CONT_TYPE>SCREEN</CONT_TYPE>
+       <CONT_NAME>SCREEN</CONT_NAME>
+       <TYPE>TEMPLATE</TYPE>
+       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-STOP_MESSAGE</NAME>
+       <TEXT>?___________________</TEXT>
+       <LINE>005</LINE>
+       <COLUMN>022</COLUMN>
+       <LENGTH>020</LENGTH>
+       <VISLENGTH>020</VISLENGTH>
+       <HEIGHT>001</HEIGHT>
+       <GROUP1>FLD</GROUP1>
+       <FORMAT>CHAR</FORMAT>
+       <INPUT_FLD>X</INPUT_FLD>
+       <OUTPUT_FLD>X</OUTPUT_FLD>
+       <REQU_ENTRY>O</REQU_ENTRY>
+      </RPY_DYFATC>
+      <RPY_DYFATC>
+       <CONT_TYPE>SCREEN</CONT_TYPE>
+       <CONT_NAME>SCREEN</CONT_NAME>
+       <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-HANDLER_CLASS</NAME>
        <TEXT>Handler_Class_______</TEXT>
-       <LINE>005</LINE>
+       <LINE>007</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
        <VISLENGTH>020</VISLENGTH>
@@ -256,7 +290,7 @@
        <TYPE>TEMPLATE</TYPE>
        <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-HANDLER_CLASS</NAME>
        <TEXT>?_____________________________</TEXT>
-       <LINE>005</LINE>
+       <LINE>007</LINE>
        <COLUMN>022</COLUMN>
        <LENGTH>030</LENGTH>
        <VISLENGTH>030</VISLENGTH>
@@ -274,15 +308,15 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-BGR_USER</NAME>
-       <TEXT>Job_scheduler_______</TEXT>
-       <LINE>006</LINE>
+       <TEXT>executed_by_________</TEXT>
+       <LINE>008</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
        <VISLENGTH>020</VISLENGTH>
        <HEIGHT>001</HEIGHT>
        <FORMAT>CHAR</FORMAT>
        <FROM_DICT>X</FROM_DICT>
-       <MODIFIC>2</MODIFIC>
+       <MODIFIC>F</MODIFIC>
        <REQU_ENTRY>N</REQU_ENTRY>
        <LABELLEFT>X</LABELLEFT>
       </RPY_DYFATC>
@@ -292,45 +326,11 @@
        <TYPE>TEMPLATE</TYPE>
        <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-BGR_USER</NAME>
        <TEXT>?___________</TEXT>
-       <LINE>006</LINE>
+       <LINE>008</LINE>
        <COLUMN>022</COLUMN>
        <LENGTH>012</LENGTH>
        <VISLENGTH>012</VISLENGTH>
        <HEIGHT>001</HEIGHT>
-       <FORMAT>CHAR</FORMAT>
-       <INPUT_FLD>X</INPUT_FLD>
-       <OUTPUT_FLD>X</OUTPUT_FLD>
-       <REQU_ENTRY>O</REQU_ENTRY>
-      </RPY_DYFATC>
-      <RPY_DYFATC>
-       <CONT_TYPE>SCREEN</CONT_TYPE>
-       <CONT_NAME>SCREEN</CONT_NAME>
-       <TYPE>TEXT</TYPE>
-       <NAME>ZAMQ_DAEMONS-STOP_MESSAGE</NAME>
-       <TEXT>Stop_Message________</TEXT>
-       <LINE>007</LINE>
-       <COLUMN>001</COLUMN>
-       <LENGTH>020</LENGTH>
-       <VISLENGTH>020</VISLENGTH>
-       <HEIGHT>001</HEIGHT>
-       <FORMAT>CHAR</FORMAT>
-       <FROM_DICT>X</FROM_DICT>
-       <MODIFIC>2</MODIFIC>
-       <REQU_ENTRY>N</REQU_ENTRY>
-       <LABELLEFT>X</LABELLEFT>
-      </RPY_DYFATC>
-      <RPY_DYFATC>
-       <CONT_TYPE>SCREEN</CONT_TYPE>
-       <CONT_NAME>SCREEN</CONT_NAME>
-       <TYPE>TEMPLATE</TYPE>
-       <NAME>APP-&gt;SCREEN_FIELDS-DAEMON-STOP_MESSAGE</NAME>
-       <TEXT>?___________________</TEXT>
-       <LINE>007</LINE>
-       <COLUMN>022</COLUMN>
-       <LENGTH>020</LENGTH>
-       <VISLENGTH>020</VISLENGTH>
-       <HEIGHT>001</HEIGHT>
-       <GROUP1>FLD</GROUP1>
        <FORMAT>CHAR</FORMAT>
        <INPUT_FLD>X</INPUT_FLD>
        <OUTPUT_FLD>X</OUTPUT_FLD>

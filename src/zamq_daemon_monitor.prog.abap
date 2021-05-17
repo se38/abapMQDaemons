@@ -238,13 +238,13 @@ CLASS lcl_app IMPLEMENTATION.
 
         r_result->get_columns( )->get_column( 'GUID' )->set_technical( abap_true ).
         r_result->get_columns( )->get_column( 'MANDT' )->set_technical( abap_true ).
-        r_result->get_columns( )->get_column( 'LOG_HANDLE' )->set_technical( abap_true ).
         r_result->get_columns( )->set_optimize( abap_true ).
 
         r_result->get_display_settings( )->set_striped_pattern( abap_true ).
 
       CATCH cx_salv_msg
-            cx_salv_not_found.
+            cx_salv_not_found INTO DATA(lcx).
+        MESSAGE lcx TYPE 'I'.
     ENDTRY.
 
     r_result->display( ).

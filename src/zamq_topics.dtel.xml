@@ -11,9 +11,9 @@
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
     <DDTEXT>abapMQ Daemons: Topics separated by comma</DDTEXT>
-    <REPTEXT>Topics</REPTEXT>
-    <SCRTEXT_S>Topics</SCRTEXT_S>
-    <SCRTEXT_M>Topics</SCRTEXT_M>
+    <REPTEXT>Topic(s)</REPTEXT>
+    <SCRTEXT_S>Topic(s)</SCRTEXT_S>
+    <SCRTEXT_M>Topic(s)</SCRTEXT_M>
     <SCRTEXT_L>Topics separated by comma</SCRTEXT_L>
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>

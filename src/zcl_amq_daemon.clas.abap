@@ -180,7 +180,7 @@ CLASS zcl_amq_daemon IMPLEMENTATION.
     SUBMIT zamq_handle_message
       WITH p_mguid = message_guid
       WITH p_dguid = daemon-guid
-      USER 'DEVELOPER'
+      USER daemon-bgr_user
       VIA JOB 'ABAPMQ' NUMBER jobcount
       AND RETURN.
 

@@ -131,7 +131,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-BROKER_NAME</NAME>
-       <TEXT>Broker______________</TEXT>
        <LINE>002</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
@@ -166,7 +165,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-DAEMON_NAME</NAME>
-       <TEXT>Daemonname__________</TEXT>
        <LINE>003</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
@@ -201,7 +199,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-TOPICS</NAME>
-       <TEXT>Topic(s)____________</TEXT>
        <ROLLING>X</ROLLING>
        <LINE>004</LINE>
        <COLUMN>001</COLUMN>
@@ -238,7 +235,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_DAEMONS-STOP_MESSAGE</NAME>
-       <TEXT>Stop_Message________</TEXT>
        <LINE>005</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
@@ -331,6 +327,7 @@
        <LENGTH>012</LENGTH>
        <VISLENGTH>012</VISLENGTH>
        <HEIGHT>001</HEIGHT>
+       <GROUP1>FLD</GROUP1>
        <FORMAT>CHAR</FORMAT>
        <INPUT_FLD>X</INPUT_FLD>
        <OUTPUT_FLD>X</OUTPUT_FLD>
@@ -464,7 +461,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_BROKER-BROKER_NAME</NAME>
-       <TEXT>Broker______________</TEXT>
        <LINE>001</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>
@@ -498,7 +494,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_BROKER-BROKER_HOST</NAME>
-       <TEXT>Host/IP_or_Route_Str</TEXT>
        <ROLLING>X</ROLLING>
        <LINE>002</LINE>
        <COLUMN>001</COLUMN>
@@ -535,7 +530,6 @@
        <CONT_NAME>SCREEN</CONT_NAME>
        <TYPE>TEXT</TYPE>
        <NAME>ZAMQ_BROKER-BROKER_PORT</NAME>
-       <TEXT>Peer_Port_Number____</TEXT>
        <LINE>003</LINE>
        <COLUMN>001</COLUMN>
        <LENGTH>020</LENGTH>

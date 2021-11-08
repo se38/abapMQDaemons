@@ -424,6 +424,9 @@ CLASS lcl_app IMPLEMENTATION.
     IF sy-pfkey <> '9015'.
       IF change_ind = 'I' OR change_ind = 'U'.
         SET PF-STATUS '9015' EXCLUDING 'DELETE'.
+        IF change_ind = 'I'.
+          screen_fields-broker-broker_port = '1883'.    "Default Port
+        ENDIF.
       ELSE.
         SET PF-STATUS '9015' EXCLUDING 'SAVE'.
       ENDIF.

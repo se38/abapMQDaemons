@@ -376,6 +376,8 @@ CLASS lcl_app IMPLEMENTATION.
           IF connack->get_return_code( ) = '00'.
             SPLIT i_daemon->topics AT ',' INTO DATA(first_topic) DATA(dummy).
 
+            REPLACE FIRST OCCURRENCE OF '+' IN first_topic WITH 'dummy'.   "no stop message to generic topic possible -> replace with dummy
+
             DATA(message) = VALUE zif_mqtt_packet=>ty_message(
               topic   = first_topic
               message = cl_binary_convert=>string_to_xstring_utf8( |{ i_daemon->stop_message }| ) ).
